@@ -85,14 +85,6 @@
             background: rgba(200, 170, 240, 0.15);
             color: #6a5090;
         }
-        body.light-theme #music-control {
-            background: rgba(240, 235, 255, 0.8);
-            border-color: rgba(200, 170, 240, 0.15);
-            color: #1e1a2b;
-        }
-        body.light-theme #music-control button {
-            color: #1e1a2b;
-        }
         body.light-theme #loading-screen {
             background: #f8f4ff;
         }
@@ -158,14 +150,6 @@
         }
         body.light-theme #question #question-sub {
             color: #6a5090;
-        }
-        body.light-theme #music-control {
-            background: rgba(240, 235, 255, 0.8);
-            border-color: rgba(200, 170, 240, 0.15);
-            color: #1e1a2b;
-        }
-        body.light-theme #music-control button {
-            color: #1e1a2b;
         }
 
         /* ===== UTILITY ===== */
@@ -391,51 +375,6 @@
             color: #3d2e5a;
         }
 
-        /* ===== MUSIC CONTROL ===== */
-        #music-control {
-            background: rgba(20, 16, 30, 0.7);
-            backdrop-filter: blur(12px);
-            border-radius: 40px;
-            padding: 0.4rem 0.8rem;
-            border: 1px solid rgba(255, 220, 240, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            color: #d9c9e6;
-            font-size: 0.8rem;
-            transition: background 0.4s, border-color 0.4s, color 0.4s;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            flex-shrink: 0;
-        }
-        #music-control.hidden {
-            display: none !important;
-        }
-        #music-control button {
-            background: none;
-            border: none;
-            color: #d9c9e6;
-            cursor: pointer;
-            padding: 2px;
-            display: flex;
-            align-items: center;
-            transition: color 0.4s;
-        }
-        #music-control button svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
-            stroke: currentColor;
-            stroke-width: 1.5;
-        }
-        body.light-theme #music-control {
-            background: rgba(240, 235, 255, 0.8);
-            border-color: rgba(200, 170, 240, 0.15);
-            color: #1e1a2b;
-        }
-        body.light-theme #music-control button {
-            color: #1e1a2b;
-        }
-
         /* Language Dropdown */
         .lang-dropdown {
             position: absolute;
@@ -476,8 +415,9 @@
             background: rgba(200, 170, 240, 0.1);
         }
         .lang-dropdown button.active {
-            background: rgba(200, 170, 240, 0.15);
+            background: rgba(200, 170, 240, 0.2);
             color: #f5eff7;
+            border-left: 3px solid #b8a0d9;
         }
         body.light-theme .lang-dropdown button {
             color: #1e1a2b;
@@ -488,6 +428,7 @@
         body.light-theme .lang-dropdown button.active {
             background: rgba(200, 170, 240, 0.15);
             color: #1e1a2b;
+            border-left-color: #9b7bc0;
         }
 
         /* ===== PROGRESS DOTS ===== */
@@ -763,14 +704,6 @@
                 width: 17px;
                 height: 17px;
             }
-            #music-control {
-                padding: 0.3rem 0.6rem;
-                font-size: 0.7rem;
-            }
-            #music-control button svg {
-                width: 16px;
-                height: 16px;
-            }
             .secret-trigger {
                 bottom: 72px;
                 right: 16px;
@@ -830,13 +763,6 @@
 
     <!-- TOP CONTROLS -->
     <div id="top-controls">
-        <!-- Music Control -->
-        <div id="music-control" class="hidden">
-            <button id="music-toggle">
-                <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-            </button>
-        </div>
-
         <!-- Language Button with Dropdown -->
         <div style="position:relative; display:inline-block;">
             <button class="icon-btn" id="lang-btn">
@@ -982,8 +908,6 @@
             herName: "You",
             myName: "Your Name",
             proposalQuestion: "Will you give us a chance?",
-            // Using a real working audio file (free to use)
-            musicFile: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
         };
 
         // ============================================================
@@ -1251,10 +1175,8 @@
             let currentSection = 0;
             let isLoading = true;
             let isReady = false;
-            let isMusicPlaying = false;
             let isDarkMode = true;
             let heartActivated = false;
-            let audio = null;
             let touchStartX = 0;
 
             const totalSections = 9;
@@ -1269,12 +1191,33 @@
             const secretTrigger = document.getElementById('secret-trigger');
             const secretReveal = document.getElementById('secret-reveal');
             const closeSecret = document.getElementById('close-secret');
-            const musicToggle = document.getElementById('music-toggle');
-            const musicControl = document.getElementById('music-control');
             const langBtn = document.getElementById('lang-btn');
             const langDropdown = document.getElementById('lang-dropdown');
             const themeBtn = document.getElementById('theme-btn');
             const sections = document.querySelectorAll('.section');
+
+            // ---- Audio Context for click sounds ----
+            let audioCtx = null;
+
+            function playClickSound() {
+                try {
+                    if (!audioCtx) {
+                        audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                    }
+                    const oscillator = audioCtx.createOscillator();
+                    const gainNode = audioCtx.createGain();
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+                    oscillator.frequency.value = 800;
+                    oscillator.type = 'sine';
+                    gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+                    oscillator.start(audioCtx.currentTime);
+                    oscillator.stop(audioCtx.currentTime + 0.15);
+                } catch (e) {
+                    // Silent fallback
+                }
+            }
 
             // ---- set dynamic text ----
             function updateTexts() {
@@ -1381,29 +1324,33 @@
 
             function nextSection() {
                 if (currentSection < totalSections - 1) {
+                    playClickSound();
                     showSection(currentSection + 1);
                 }
             }
 
             function prevSection() {
                 if (currentSection > 0) {
+                    playClickSound();
                     showSection(currentSection - 1);
                 }
             }
 
-            // ---- swipe handling (only for going back) ----
+            // ---- swipe handling (right swipe goes back) ----
             document.addEventListener('touchstart', function(e) {
                 touchStartX = e.changedTouches[0].screenX;
             }, { passive: true });
 
             document.addEventListener('touchend', function(e) {
                 const touchEndX = e.changedTouches[0].screenX;
-                const diff = touchStartX - touchEndX;
-                // Only swipe right to left (diff > 0) goes back
-                // Swipe left to right (diff < 0) does nothing - forward only via buttons
-                if (Math.abs(diff) > 50 && diff > 0) {
-                    // Swipe left -> go back
-                    prevSection();
+                const diff = touchEndX - touchStartX;
+                // Swipe right to left (diff < 0) - go forward
+                // Swipe left to right (diff > 0) - go back
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) {
+                        // Swipe right -> go back
+                        prevSection();
+                    }
                 }
             }, { passive: true });
 
@@ -1416,25 +1363,17 @@
             readyBtn.addEventListener('click', function() {
                 if (isLoading) return;
                 isReady = true;
+                playClickSound();
                 loadingScreen.style.opacity = '0';
                 setTimeout(() => { loadingScreen.classList.add('hidden'); }, 800);
-                musicControl.classList.remove('hidden');
-                initMusic();
-                // Start music on interaction
-                if (audio) {
-                    audio.play().catch(() => {
-                        // If autoplay fails, user can click again
-                    });
-                    isMusicPlaying = true;
-                    updateMusicIcon();
-                }
             });
 
             startStoryBtn.addEventListener('click', function() {
+                playClickSound();
                 showSection(1);
             });
 
-            // ---- attach "next" buttons ----
+            // ---- attach "next" buttons with click sound ----
             document.getElementById('personal-next').addEventListener('click', nextSection);
             document.getElementById('why-next').addEventListener('click', nextSection);
             document.getElementById('timeline-next').addEventListener('click', nextSection);
@@ -1445,6 +1384,7 @@
             // ---- why you cards interaction ----
             document.querySelectorAll('#why-cards .memory-card').forEach(card => {
                 card.addEventListener('click', function() {
+                    playClickSound();
                     this.style.background = 'rgba(200,170,240,0.08)';
                     setTimeout(() => { this.style.background = ''; }, 300);
                 });
@@ -1457,6 +1397,7 @@
 
             heartOrb.addEventListener('click', function() {
                 if (heartActivated) return;
+                playClickSound();
                 this.classList.add('expanded');
                 heartMsg.classList.remove('hidden');
                 heartNext.classList.remove('hidden');
@@ -1471,6 +1412,7 @@
                     const choice = this.dataset.choice;
                     const responses = translations[currentLang].question.responses;
                     let msg = responses[choice] || '';
+                    playClickSound();
                     choiceResponse.innerHTML = msg.replace(/\n/g, '<br>');
                     choiceResponse.classList.remove('hidden');
                     document.querySelector('.choice-group').style.display = 'none';
@@ -1485,56 +1427,28 @@
 
             // ---- secret ----
             secretTrigger.addEventListener('click', () => {
+                playClickSound();
                 secretReveal.classList.add('show');
             });
             closeSecret.addEventListener('click', () => {
+                playClickSound();
                 secretReveal.classList.remove('show');
             });
             secretReveal.addEventListener('click', (e) => {
                 if (e.target === secretReveal) secretReveal.classList.remove('show');
             });
 
-            // ---- music system ----
-            function initMusic() {
-                if (audio) return;
-                try {
-                    audio = new Audio(CONFIG.musicFile);
-                    audio.loop = true;
-                    audio.volume = 0.3;
-                } catch (e) { /* fallback */ }
-                musicToggle.addEventListener('click', toggleMusic);
-            }
-
-            function toggleMusic() {
-                if (!audio) return;
-                if (isMusicPlaying) {
-                    audio.pause();
-                } else {
-                    audio.play().catch(() => {});
-                }
-                isMusicPlaying = !isMusicPlaying;
-                updateMusicIcon();
-            }
-
-            function updateMusicIcon() {
-                if (isMusicPlaying) {
-                    musicToggle.innerHTML =
-                        '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
-                } else {
-                    musicToggle.innerHTML =
-                        '<svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>';
-                }
-            }
-
             // ---- language dropdown ----
             langBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
+                playClickSound();
                 langDropdown.classList.toggle('show');
             });
 
             document.querySelectorAll('.lang-dropdown button').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.stopPropagation();
+                    playClickSound();
                     currentLang = this.dataset.lang;
                     langDropdown.classList.remove('show');
                     updateTexts();
@@ -1547,6 +1461,7 @@
 
             // ---- theme switch ----
             themeBtn.addEventListener('click', function() {
+                playClickSound();
                 isDarkMode = !isDarkMode;
                 document.body.classList.toggle('light-theme', !isDarkMode);
                 if (isDarkMode) {
@@ -1660,7 +1575,10 @@
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     const active = document.activeElement;
-                    if (active && active.classList.contains('btn')) active.click();
+                    if (active && active.classList.contains('btn')) {
+                        playClickSound();
+                        active.click();
+                    }
                 }
                 if (e.key === 'ArrowLeft') prevSection();
                 if (e.key === 'ArrowRight') nextSection();
