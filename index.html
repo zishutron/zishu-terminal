@@ -137,7 +137,7 @@
             border-top-color: rgba(150, 120, 200, 0.15);
         }
         body.light-theme .icon-btn {
-            background: rgba(240, 235, 255, 0.6);
+            background: rgba(240, 235, 255, 0.8);
             border-color: rgba(200, 170, 240, 0.2);
             color: #3d2e5a;
         }
@@ -158,6 +158,14 @@
         }
         body.light-theme #question #question-sub {
             color: #6a5090;
+        }
+        body.light-theme #music-control {
+            background: rgba(240, 235, 255, 0.8);
+            border-color: rgba(200, 170, 240, 0.15);
+            color: #1e1a2b;
+        }
+        body.light-theme #music-control button {
+            color: #1e1a2b;
         }
 
         /* ===== UTILITY ===== */
@@ -345,18 +353,17 @@
             top: 16px;
             right: 16px;
             display: flex;
-            gap: 10px;
+            gap: 8px;
             z-index: 100;
-            flex-wrap: wrap;
-            justify-content: flex-end;
+            align-items: center;
         }
         .icon-btn {
             background: rgba(20, 16, 30, 0.7);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 215, 235, 0.12);
             border-radius: 50%;
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -366,13 +373,14 @@
             transition: all 0.25s;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             position: relative;
+            flex-shrink: 0;
         }
         .icon-btn:active {
             transform: scale(0.92);
         }
         .icon-btn svg {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             fill: currentColor;
             stroke: currentColor;
             stroke-width: 1.5;
@@ -383,20 +391,66 @@
             color: #3d2e5a;
         }
 
+        /* ===== MUSIC CONTROL ===== */
+        #music-control {
+            background: rgba(20, 16, 30, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 40px;
+            padding: 0.4rem 0.8rem;
+            border: 1px solid rgba(255, 220, 240, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: #d9c9e6;
+            font-size: 0.8rem;
+            transition: background 0.4s, border-color 0.4s, color 0.4s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+        #music-control.hidden {
+            display: none !important;
+        }
+        #music-control button {
+            background: none;
+            border: none;
+            color: #d9c9e6;
+            cursor: pointer;
+            padding: 2px;
+            display: flex;
+            align-items: center;
+            transition: color 0.4s;
+        }
+        #music-control button svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+            stroke: currentColor;
+            stroke-width: 1.5;
+        }
+        body.light-theme #music-control {
+            background: rgba(240, 235, 255, 0.8);
+            border-color: rgba(200, 170, 240, 0.15);
+            color: #1e1a2b;
+        }
+        body.light-theme #music-control button {
+            color: #1e1a2b;
+        }
+
         /* Language Dropdown */
         .lang-dropdown {
             position: absolute;
-            top: 52px;
+            top: 48px;
             right: 0;
             background: rgba(20, 16, 30, 0.95);
             backdrop-filter: blur(16px);
             border-radius: 16px;
             border: 1px solid rgba(255, 215, 235, 0.1);
-            padding: 8px 0;
-            min-width: 140px;
+            padding: 6px 0;
+            min-width: 130px;
             display: none;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
             overflow: hidden;
+            z-index: 101;
         }
         .lang-dropdown.show {
             display: block;
@@ -408,11 +462,11 @@
         .lang-dropdown button {
             display: block;
             width: 100%;
-            padding: 10px 20px;
+            padding: 8px 16px;
             background: none;
             border: none;
             color: #d9c9e6;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             cursor: pointer;
             text-align: left;
             font-family: 'Inter', sans-serif;
@@ -433,54 +487,6 @@
         }
         body.light-theme .lang-dropdown button.active {
             background: rgba(200, 170, 240, 0.15);
-            color: #1e1a2b;
-        }
-
-        /* ===== MUSIC CONTROL (top-right) ===== */
-        #music-control {
-            position: fixed;
-            top: 16px;
-            right: 72px;
-            z-index: 100;
-            background: rgba(20, 16, 30, 0.7);
-            backdrop-filter: blur(12px);
-            border-radius: 40px;
-            padding: 0.5rem 1rem;
-            border: 1px solid rgba(255, 220, 240, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            color: #d9c9e6;
-            font-size: 0.8rem;
-            transition: background 0.4s, border-color 0.4s, color 0.4s;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-        #music-control.hidden {
-            display: none !important;
-        }
-        #music-control button {
-            background: none;
-            border: none;
-            color: #d9c9e6;
-            cursor: pointer;
-            padding: 2px;
-            display: flex;
-            align-items: center;
-            transition: color 0.4s;
-        }
-        #music-control button svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-            stroke: currentColor;
-            stroke-width: 1.5;
-        }
-        body.light-theme #music-control {
-            background: rgba(240, 235, 255, 0.8);
-            border-color: rgba(200, 170, 240, 0.15);
-            color: #1e1a2b;
-        }
-        body.light-theme #music-control button {
             color: #1e1a2b;
         }
 
@@ -512,12 +518,11 @@
             box-shadow: 0 0 12px #b8a0d9;
         }
 
-        /* ===== SECRET (bottom-center) ===== */
+        /* ===== SECRET (bottom-right) ===== */
         .secret-trigger {
             position: fixed;
             bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 24px;
             width: 44px;
             height: 44px;
             border-radius: 50%;
@@ -534,7 +539,7 @@
             box-shadow: 0 0 20px rgba(180, 130, 210, 0.1);
         }
         .secret-trigger:active {
-            transform: translateX(-50%) scale(0.9);
+            transform: scale(0.9);
             background: rgba(200, 170, 240, 0.2);
         }
         .secret-trigger svg {
@@ -746,30 +751,29 @@
                 font-size: 2.4rem;
             }
             #top-controls {
-                top: 12px;
-                right: 12px;
+                top: 10px;
+                right: 10px;
                 gap: 6px;
             }
             .icon-btn {
-                width: 38px;
-                height: 38px;
+                width: 36px;
+                height: 36px;
             }
             .icon-btn svg {
-                width: 18px;
-                height: 18px;
-            }
-            #music-control {
-                top: 12px;
-                right: 62px;
-                padding: 0.4rem 0.8rem;
-                font-size: 0.7rem;
-            }
-            #music-control button svg {
                 width: 17px;
                 height: 17px;
             }
+            #music-control {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.7rem;
+            }
+            #music-control button svg {
+                width: 16px;
+                height: 16px;
+            }
             .secret-trigger {
                 bottom: 72px;
+                right: 16px;
                 width: 38px;
                 height: 38px;
             }
@@ -778,12 +782,22 @@
                 height: 18px;
             }
             .lang-dropdown {
-                min-width: 120px;
-                top: 46px;
+                min-width: 110px;
+                top: 42px;
+                right: 0;
             }
             .lang-dropdown button {
-                padding: 8px 16px;
-                font-size: 0.85rem;
+                padding: 6px 14px;
+                font-size: 0.8rem;
+            }
+            .progress-dots {
+                bottom: 20px;
+                padding: 0.4rem 0.8rem;
+                gap: 6px;
+            }
+            .dot {
+                width: 6px;
+                height: 6px;
             }
         }
         @media (min-width: 768px) {
@@ -824,7 +838,7 @@
         </div>
 
         <!-- Language Button with Dropdown -->
-        <div style="position:relative;">
+        <div style="position:relative; display:inline-block;">
             <button class="icon-btn" id="lang-btn">
                 <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
             </button>
@@ -844,7 +858,7 @@
     <!-- PROGRESS DOTS -->
     <div class="progress-dots" id="progress-dots"></div>
 
-    <!-- SECRET TRIGGER (bottom-center) -->
+    <!-- SECRET TRIGGER (bottom-right) -->
     <div class="secret-trigger" id="secret-trigger">
         <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
     </div>
@@ -968,7 +982,8 @@
             herName: "You",
             myName: "Your Name",
             proposalQuestion: "Will you give us a chance?",
-            musicFile: "/assets/music/romantic.mp3",
+            // Using a real working audio file (free to use)
+            musicFile: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
         };
 
         // ============================================================
@@ -1241,7 +1256,6 @@
             let heartActivated = false;
             let audio = null;
             let touchStartX = 0;
-            let touchEndX = 0;
 
             const totalSections = 9;
             const t = () => translations[currentLang];
@@ -1333,7 +1347,6 @@
 
                 document.title = '💜 ' + data.intro.title;
 
-                // Update language dropdown active state
                 document.querySelectorAll('.lang-dropdown button').forEach(btn => {
                     btn.classList.toggle('active', btn.dataset.lang === currentLang);
                 });
@@ -1378,22 +1391,19 @@
                 }
             }
 
-            // ---- swipe handling ----
+            // ---- swipe handling (only for going back) ----
             document.addEventListener('touchstart', function(e) {
                 touchStartX = e.changedTouches[0].screenX;
             }, { passive: true });
 
             document.addEventListener('touchend', function(e) {
-                touchEndX = e.changedTouches[0].screenX;
+                const touchEndX = e.changedTouches[0].screenX;
                 const diff = touchStartX - touchEndX;
-                if (Math.abs(diff) > 50) {
-                    if (diff > 0) {
-                        // Swipe left - go forward
-                        nextSection();
-                    } else {
-                        // Swipe right - go back
-                        prevSection();
-                    }
+                // Only swipe right to left (diff > 0) goes back
+                // Swipe left to right (diff < 0) does nothing - forward only via buttons
+                if (Math.abs(diff) > 50 && diff > 0) {
+                    // Swipe left -> go back
+                    prevSection();
                 }
             }, { passive: true });
 
@@ -1412,7 +1422,9 @@
                 initMusic();
                 // Start music on interaction
                 if (audio) {
-                    audio.play().catch(() => {});
+                    audio.play().catch(() => {
+                        // If autoplay fails, user can click again
+                    });
                     isMusicPlaying = true;
                     updateMusicIcon();
                 }
