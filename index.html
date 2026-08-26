@@ -40,7 +40,7 @@
             color: #1e1a2b;
         }
         body.light-theme .glass-card {
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.7);
             border: 1px solid rgba(200, 170, 240, 0.15);
         }
         body.light-theme .section-title,
@@ -56,6 +56,9 @@
         body.light-theme .memory-card {
             background: rgba(200, 170, 240, 0.08);
             border-left-color: #9b7bc0;
+        }
+        body.light-theme .memory-card p {
+            color: #1e1a2b;
         }
         body.light-theme .choice-btn {
             background: rgba(200, 170, 240, 0.06);
@@ -83,7 +86,7 @@
             color: #6a5090;
         }
         body.light-theme #music-control {
-            background: rgba(240, 235, 255, 0.7);
+            background: rgba(240, 235, 255, 0.8);
             border-color: rgba(200, 170, 240, 0.15);
             color: #1e1a2b;
         }
@@ -113,6 +116,48 @@
         }
         body.light-theme #secret-reveal p {
             color: #1e1a2b;
+        }
+        body.light-theme #secret-reveal .big {
+            color: #1e1a2b;
+        }
+        body.light-theme #secret-reveal .highlight {
+            color: #9b7bc0;
+        }
+        body.light-theme #intro {
+            background: radial-gradient(ellipse at 40% 30%, #ede4ff, #f8f4ff);
+        }
+        body.light-theme #intro h1 {
+            color: #1e1a2b;
+        }
+        body.light-theme #intro .sub {
+            color: #3d2e5a;
+        }
+        body.light-theme .intro-tagline {
+            color: #6a5090;
+            border-top-color: rgba(150, 120, 200, 0.15);
+        }
+        body.light-theme .icon-btn {
+            background: rgba(240, 235, 255, 0.6);
+            border-color: rgba(200, 170, 240, 0.2);
+            color: #3d2e5a;
+        }
+        body.light-theme #question {
+            background: #f8f4ff !important;
+        }
+        body.light-theme #realized {
+            background: radial-gradient(ellipse at 30% 40%, #ede4ff, #f8f4ff) !important;
+        }
+        body.light-theme #realized .heartbeat-text {
+            color: #9b7bc0;
+        }
+        body.light-theme #realized #realized-line5 {
+            color: #1e1a2b !important;
+        }
+        body.light-theme #question .heartbeat-text {
+            color: #9b7bc0;
+        }
+        body.light-theme #question #question-sub {
+            color: #6a5090;
         }
 
         /* ===== UTILITY ===== */
@@ -259,6 +304,7 @@
             font-size: 1.1rem;
             letter-spacing: 2px;
             color: #b8a0d9;
+            transition: color 0.4s;
         }
 
         /* ===== INTRO ===== */
@@ -267,9 +313,6 @@
             text-align: center;
             min-height: 100vh;
             transition: background 0.4s;
-        }
-        body.light-theme #intro {
-            background: radial-gradient(ellipse at 40% 30%, #ede4ff, #f8f4ff);
         }
         #intro h1 {
             font-family: 'Playfair Display', serif;
@@ -280,18 +323,12 @@
             line-height: 1.2;
             transition: color 0.4s;
         }
-        body.light-theme #intro h1 {
-            color: #1e1a2b;
-        }
         #intro .sub {
             font-size: 1.2rem;
             color: #d9c9e6;
             margin-top: 0.8rem;
             opacity: 0.8;
             transition: color 0.4s;
-        }
-        body.light-theme #intro .sub {
-            color: #3d2e5a;
         }
         .intro-tagline {
             margin-top: 1.8rem;
@@ -301,26 +338,22 @@
             padding-top: 1.8rem;
             transition: color 0.4s, border-color 0.4s;
         }
-        body.light-theme .intro-tagline {
-            color: #6a5090;
-            border-top-color: rgba(150, 120, 200, 0.15);
-        }
 
-        /* Language & Theme buttons on intro */
+        /* ===== TOP CONTROLS ===== */
         #top-controls {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+            position: fixed;
+            top: 16px;
+            right: 16px;
             display: flex;
             gap: 10px;
-            z-index: 50;
+            z-index: 100;
             flex-wrap: wrap;
             justify-content: flex-end;
         }
         .icon-btn {
-            background: rgba(255, 235, 245, 0.08);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 215, 235, 0.15);
+            background: rgba(20, 16, 30, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 215, 235, 0.12);
             border-radius: 50%;
             width: 44px;
             height: 44px;
@@ -331,7 +364,8 @@
             color: #d9c9e6;
             font-size: 1.2rem;
             transition: all 0.25s;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
         }
         .icon-btn:active {
             transform: scale(0.92);
@@ -344,235 +378,108 @@
             stroke-width: 1.5;
         }
         body.light-theme .icon-btn {
-            background: rgba(240, 235, 255, 0.6);
+            background: rgba(240, 235, 255, 0.8);
             border-color: rgba(200, 170, 240, 0.2);
             color: #3d2e5a;
         }
-        .icon-btn.active {
-            background: rgba(200, 170, 240, 0.2);
-            border-color: #b8a0d9;
-        }
 
-        /* ===== SECTIONS ===== */
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.2rem;
-            font-weight: 400;
-            line-height: 1.2;
-            margin-bottom: 1.8rem;
-            letter-spacing: -0.01em;
-            color: #f5eff7;
-            transition: color 0.4s;
-        }
-        .section-sub {
-            font-size: 1rem;
-            color: #cfc0df;
-            line-height: 1.7;
-            margin-bottom: 1.8rem;
-            transition: color 0.4s;
-        }
-        .heartbeat-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            font-weight: 300;
-            color: #e7b0c0;
-            text-shadow: 0 0 30px rgba(220, 140, 180, 0.2);
-            transition: color 0.4s;
-        }
-
-        /* memory cards */
-        .memory-card {
-            background: rgba(255, 235, 245, 0.04);
-            backdrop-filter: blur(6px);
-            border-radius: 32px;
-            padding: 1.4rem 1.6rem;
-            margin-bottom: 1.2rem;
-            border-left: 3px solid #b8a0d9;
-            transition: 0.2s, background 0.4s, border-color 0.4s;
-            cursor: default;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-        }
-        .memory-card:active {
-            transform: scale(0.98);
-            background: rgba(255, 235, 245, 0.08);
-        }
-        .memory-card .label {
-            font-size: 0.8rem;
-            color: #b8a0d9;
-            letter-spacing: 1px;
-            transition: color 0.4s;
-        }
-        .memory-card p {
-            margin-top: 0.3rem;
-            color: #ede4f5;
-            transition: color 0.4s;
-        }
-
-        /* timeline */
-        .timeline-item {
-            position: relative;
-            padding-left: 2rem;
-            margin-bottom: 2.2rem;
-            border-left: 2px solid rgba(200, 170, 240, 0.2);
-            transition: border-color 0.4s;
-        }
-        .timeline-item::before {
-            content: "✦";
+        /* Language Dropdown */
+        .lang-dropdown {
             position: absolute;
-            left: -12px;
-            top: 0;
-            color: #d9b0d0;
-            font-size: 1.2rem;
+            top: 52px;
+            right: 0;
+            background: rgba(20, 16, 30, 0.95);
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 215, 235, 0.1);
+            padding: 8px 0;
+            min-width: 140px;
+            display: none;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
         }
-        .timeline-item .date {
-            font-size: 0.8rem;
-            color: #b8a0d9;
-            letter-spacing: 0.5px;
-            transition: color 0.4s;
+        .lang-dropdown.show {
+            display: block;
         }
-        .timeline-item .desc {
-            font-size: 1rem;
-            margin-top: 0.2rem;
-            color: #ede4f5;
-            transition: color 0.4s;
+        body.light-theme .lang-dropdown {
+            background: rgba(248, 244, 255, 0.95);
+            border-color: rgba(200, 170, 240, 0.15);
         }
-
-        /* heart orb */
-        #heart-orb {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 40% 30%, #e7b0c0, #b070b0);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3.2rem;
-            box-shadow: 0 0 60px rgba(200, 130, 200, 0.3);
-            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.3, 1);
-            cursor: pointer;
-            margin: 1.8rem auto;
-            user-select: none;
-            color: #fff;
-        }
-        #heart-orb:active {
-            transform: scale(0.92);
-        }
-        #heart-orb.expanded {
-            transform: scale(1.2);
-            box-shadow: 0 0 120px rgba(220, 150, 210, 0.6);
-        }
-
-        /* choice buttons */
-        .choice-group {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+        .lang-dropdown button {
+            display: block;
             width: 100%;
-            margin-top: 1.8rem;
-        }
-        .choice-btn {
-            background: rgba(255, 235, 245, 0.05);
-            border: 1px solid rgba(200, 170, 240, 0.15);
-            border-radius: 60px;
-            padding: 1.2rem 1.5rem;
-            color: #f5eff7;
-            font-size: 1rem;
-            font-weight: 400;
-            transition: 0.2s, background 0.4s, border-color 0.4s, color 0.4s;
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: #d9c9e6;
+            font-size: 0.95rem;
             cursor: pointer;
             text-align: left;
-            backdrop-filter: blur(4px);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
             font-family: 'Inter', sans-serif;
+            transition: background 0.2s;
         }
-        .choice-btn:active {
-            transform: scale(0.97);
-            background: rgba(255, 235, 245, 0.1);
+        .lang-dropdown button:hover {
+            background: rgba(200, 170, 240, 0.1);
         }
-        .choice-btn .sub {
-            display: block;
-            font-size: 0.8rem;
-            color: #b8a0d9;
-            margin-top: 0.2rem;
-            transition: color 0.4s;
+        .lang-dropdown button.active {
+            background: rgba(200, 170, 240, 0.15);
+            color: #f5eff7;
+        }
+        body.light-theme .lang-dropdown button {
+            color: #1e1a2b;
+        }
+        body.light-theme .lang-dropdown button:hover {
+            background: rgba(200, 170, 240, 0.1);
+        }
+        body.light-theme .lang-dropdown button.active {
+            background: rgba(200, 170, 240, 0.15);
+            color: #1e1a2b;
         }
 
-        /* ===== MUSIC CONTROL ===== */
+        /* ===== MUSIC CONTROL (top-right) ===== */
         #music-control {
             position: fixed;
-            bottom: 80px;
-            right: 20px;
-            z-index: 50;
+            top: 16px;
+            right: 72px;
+            z-index: 100;
             background: rgba(20, 16, 30, 0.7);
             backdrop-filter: blur(12px);
             border-radius: 40px;
-            padding: 0.6rem 1rem;
+            padding: 0.5rem 1rem;
             border: 1px solid rgba(255, 220, 240, 0.1);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
             color: #d9c9e6;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             transition: background 0.4s, border-color 0.4s, color 0.4s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        #music-control.hidden {
+            display: none !important;
         }
         #music-control button {
             background: none;
             border: none;
             color: #d9c9e6;
             cursor: pointer;
-            padding: 0 0.2rem;
+            padding: 2px;
             display: flex;
             align-items: center;
             transition: color 0.4s;
         }
         #music-control button svg {
-            width: 22px;
-            height: 22px;
-            fill: currentColor;
-            stroke: currentColor;
-            stroke-width: 1.5;
-        }
-
-        /* ===== BACK BUTTON ===== */
-        #back-btn {
-            position: fixed;
-            bottom: 80px;
-            left: 20px;
-            z-index: 50;
-            background: rgba(20, 16, 30, 0.7);
-            backdrop-filter: blur(12px);
-            border-radius: 40px;
-            padding: 0.6rem 1rem;
-            border: 1px solid rgba(255, 220, 240, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            color: #d9c9e6;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.25s, background 0.4s, border-color 0.4s, color 0.4s;
-            font-family: 'Inter', sans-serif;
-        }
-        #back-btn:active {
-            transform: scale(0.92);
-        }
-        #back-btn svg {
             width: 20px;
             height: 20px;
             fill: currentColor;
             stroke: currentColor;
             stroke-width: 1.5;
         }
-        #back-btn.hidden {
-            display: none !important;
-        }
-        body.light-theme #back-btn,
         body.light-theme #music-control {
-            background: rgba(240, 235, 255, 0.7);
+            background: rgba(240, 235, 255, 0.8);
             border-color: rgba(200, 170, 240, 0.15);
             color: #1e1a2b;
         }
-        body.light-theme #back-btn button,
         body.light-theme #music-control button {
             color: #1e1a2b;
         }
@@ -605,11 +512,12 @@
             box-shadow: 0 0 12px #b8a0d9;
         }
 
-        /* ===== SECRET ===== */
+        /* ===== SECRET (bottom-center) ===== */
         .secret-trigger {
             position: fixed;
-            bottom: 28px;
-            right: 28px;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
             width: 44px;
             height: 44px;
             border-radius: 50%;
@@ -619,7 +527,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
             color: #b8a0d9;
             cursor: pointer;
             z-index: 40;
@@ -627,7 +534,7 @@
             box-shadow: 0 0 20px rgba(180, 130, 210, 0.1);
         }
         .secret-trigger:active {
-            transform: scale(0.9);
+            transform: translateX(-50%) scale(0.9);
             background: rgba(200, 170, 240, 0.2);
         }
         .secret-trigger svg {
@@ -637,12 +544,16 @@
             stroke: currentColor;
             stroke-width: 1.5;
         }
+        body.light-theme .secret-trigger {
+            background: rgba(200, 170, 240, 0.15);
+            color: #6a5090;
+        }
 
         #secret-reveal {
             position: fixed;
             inset: 0;
             z-index: 100;
-            background: rgba(12, 10, 20, 0.9);
+            background: rgba(12, 10, 20, 0.92);
             backdrop-filter: blur(16px);
             display: none;
             flex-direction: column;
@@ -680,6 +591,146 @@
             color: #9b7bc0;
         }
 
+        /* ===== SECTIONS ===== */
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 1.8rem;
+            letter-spacing: -0.01em;
+            color: #f5eff7;
+            transition: color 0.4s;
+        }
+        .section-sub {
+            font-size: 1rem;
+            color: #cfc0df;
+            line-height: 1.7;
+            margin-bottom: 1.8rem;
+            transition: color 0.4s;
+        }
+        .heartbeat-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 300;
+            color: #e7b0c0;
+            text-shadow: 0 0 30px rgba(220, 140, 180, 0.2);
+            transition: color 0.4s;
+        }
+
+        .memory-card {
+            background: rgba(255, 235, 245, 0.04);
+            backdrop-filter: blur(6px);
+            border-radius: 32px;
+            padding: 1.4rem 1.6rem;
+            margin-bottom: 1.2rem;
+            border-left: 3px solid #b8a0d9;
+            transition: 0.2s, background 0.4s, border-color 0.4s;
+            cursor: default;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+        .memory-card:active {
+            transform: scale(0.98);
+            background: rgba(255, 235, 245, 0.08);
+        }
+        .memory-card .label {
+            font-size: 0.8rem;
+            color: #b8a0d9;
+            letter-spacing: 1px;
+            transition: color 0.4s;
+        }
+        .memory-card p {
+            margin-top: 0.3rem;
+            color: #ede4f5;
+            transition: color 0.4s;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 2.2rem;
+            border-left: 2px solid rgba(200, 170, 240, 0.2);
+            transition: border-color 0.4s;
+        }
+        .timeline-item::before {
+            content: "✦";
+            position: absolute;
+            left: -12px;
+            top: 0;
+            color: #d9b0d0;
+            font-size: 1.2rem;
+        }
+        .timeline-item .date {
+            font-size: 0.8rem;
+            color: #b8a0d9;
+            letter-spacing: 0.5px;
+            transition: color 0.4s;
+        }
+        .timeline-item .desc {
+            font-size: 1rem;
+            margin-top: 0.2rem;
+            color: #ede4f5;
+            transition: color 0.4s;
+        }
+
+        #heart-orb {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 30%, #e7b0c0, #b070b0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.2rem;
+            box-shadow: 0 0 60px rgba(200, 130, 200, 0.3);
+            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.3, 1);
+            cursor: pointer;
+            margin: 1.8rem auto;
+            user-select: none;
+            color: #fff;
+        }
+        #heart-orb:active {
+            transform: scale(0.92);
+        }
+        #heart-orb.expanded {
+            transform: scale(1.2);
+            box-shadow: 0 0 120px rgba(220, 150, 210, 0.6);
+        }
+
+        .choice-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            margin-top: 1.8rem;
+        }
+        .choice-btn {
+            background: rgba(255, 235, 245, 0.05);
+            border: 1px solid rgba(200, 170, 240, 0.15);
+            border-radius: 60px;
+            padding: 1.2rem 1.5rem;
+            color: #f5eff7;
+            font-size: 1rem;
+            font-weight: 400;
+            transition: 0.2s, background 0.4s, border-color 0.4s, color 0.4s;
+            cursor: pointer;
+            text-align: left;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            font-family: 'Inter', sans-serif;
+        }
+        .choice-btn:active {
+            transform: scale(0.97);
+            background: rgba(255, 235, 245, 0.1);
+        }
+        .choice-btn .sub {
+            display: block;
+            font-size: 0.8rem;
+            color: #b8a0d9;
+            margin-top: 0.2rem;
+            transition: color 0.4s;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
             .section {
@@ -702,22 +753,37 @@
             .icon-btn {
                 width: 38px;
                 height: 38px;
-                font-size: 1rem;
             }
             .icon-btn svg {
                 width: 18px;
                 height: 18px;
             }
-            #music-control,
-            #back-btn {
-                bottom: 72px;
+            #music-control {
+                top: 12px;
+                right: 62px;
                 padding: 0.4rem 0.8rem;
-                font-size: 0.8rem;
+                font-size: 0.7rem;
             }
-            #music-control button svg,
-            #back-btn svg {
+            #music-control button svg {
+                width: 17px;
+                height: 17px;
+            }
+            .secret-trigger {
+                bottom: 72px;
+                width: 38px;
+                height: 38px;
+            }
+            .secret-trigger svg {
                 width: 18px;
                 height: 18px;
+            }
+            .lang-dropdown {
+                min-width: 120px;
+                top: 46px;
+            }
+            .lang-dropdown button {
+                padding: 8px 16px;
+                font-size: 0.85rem;
             }
         }
         @media (min-width: 768px) {
@@ -745,26 +811,40 @@
     <div id="loading-screen">
         <div class="loader-heart"></div>
         <p id="loading-text">Preparing something special...</p>
-        <button id="ready-btn" class="btn btn-primary" style="margin-top:2rem; display:none;">Start the story</button>
+        <button id="ready-btn" class="btn btn-primary" style="margin-top:2rem; display:none;">Ready?</button>
     </div>
 
-    <!-- MUSIC CONTROL -->
-    <div id="music-control" class="hidden">
-        <button id="music-toggle">
-            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+    <!-- TOP CONTROLS -->
+    <div id="top-controls">
+        <!-- Music Control -->
+        <div id="music-control" class="hidden">
+            <button id="music-toggle">
+                <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+            </button>
+        </div>
+
+        <!-- Language Button with Dropdown -->
+        <div style="position:relative;">
+            <button class="icon-btn" id="lang-btn">
+                <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+            </button>
+            <div class="lang-dropdown" id="lang-dropdown">
+                <button data-lang="en" class="active">🇬🇧 English</button>
+                <button data-lang="hi">🇮🇳 हिंदी</button>
+                <button data-lang="vi">🇻🇳 Tiếng Việt</button>
+            </div>
+        </div>
+
+        <!-- Theme Button -->
+        <button class="icon-btn" id="theme-btn">
+            <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z"/></svg>
         </button>
     </div>
-
-    <!-- BACK BUTTON -->
-    <button id="back-btn" class="hidden">
-        <svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>
-        Back
-    </button>
 
     <!-- PROGRESS DOTS -->
     <div class="progress-dots" id="progress-dots"></div>
 
-    <!-- SECRET TRIGGER -->
+    <!-- SECRET TRIGGER (bottom-center) -->
     <div class="secret-trigger" id="secret-trigger">
         <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
     </div>
@@ -781,14 +861,6 @@
 
     <!-- INTRO -->
     <section id="intro" class="section" data-section="0">
-        <div id="top-controls">
-            <button class="icon-btn" id="lang-btn" title="Change language">
-                <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
-            </button>
-            <button class="icon-btn" id="theme-btn" title="Toggle theme">
-                <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z"/></svg>
-            </button>
-        </div>
         <div class="container" style="text-align:center;">
             <div class="fade-in delay-1"><h1>Hey <span id="her-name-display">...</span></h1></div>
             <div class="sub fade-in delay-2" id="intro-line1">I made something for you.</div>
@@ -893,7 +965,6 @@
         // CONFIGURATION (Easy to personalize)
         // ============================================================
         const CONFIG = {
-            // Use placeholder instead of real name
             herName: "You",
             myName: "Your Name",
             proposalQuestion: "Will you give us a chance?",
@@ -985,8 +1056,7 @@
                     message: "Okay, I'll admit it...\nI spent way too much time making this.",
                     subtitle: "But you were worth it.",
                     close: "Close"
-                },
-                back: "Back"
+                }
             },
             hi: {
                 loading: "कुछ खास तैयार हो रहा है...",
@@ -1069,8 +1139,7 @@
                     message: "ठीक है, मैं मानता हूं...\nमैंने इसे बनाने में बहुत ज्यादा समय बिताया।",
                     subtitle: "लेकिन तुम इसके लायक थी।",
                     close: "बंद करें"
-                },
-                back: "पीछे"
+                }
             },
             vi: {
                 loading: "Đang chuẩn bị điều đặc biệt...",
@@ -1153,8 +1222,7 @@
                     message: "Được rồi, tôi thừa nhận...\nTôi đã dành quá nhiều thời gian để làm điều này.",
                     subtitle: "Nhưng bạn xứng đáng với điều đó.",
                     close: "Đóng"
-                },
-                back: "Quay lại"
+                }
             }
         };
 
@@ -1171,8 +1239,9 @@
             let isMusicPlaying = false;
             let isDarkMode = true;
             let heartActivated = false;
-            let selectedChoice = null;
             let audio = null;
+            let touchStartX = 0;
+            let touchEndX = 0;
 
             const totalSections = 9;
             const t = () => translations[currentLang];
@@ -1186,10 +1255,10 @@
             const secretTrigger = document.getElementById('secret-trigger');
             const secretReveal = document.getElementById('secret-reveal');
             const closeSecret = document.getElementById('close-secret');
-            const backBtn = document.getElementById('back-btn');
             const musicToggle = document.getElementById('music-toggle');
             const musicControl = document.getElementById('music-control');
             const langBtn = document.getElementById('lang-btn');
+            const langDropdown = document.getElementById('lang-dropdown');
             const themeBtn = document.getElementById('theme-btn');
             const sections = document.querySelectorAll('.section');
 
@@ -1198,23 +1267,20 @@
                 const lang = currentLang;
                 const data = translations[lang];
 
-                // Loading
                 loadingText.textContent = data.loading;
                 readyBtn.textContent = data.ready;
 
-                // Intro
                 document.getElementById('intro-line1').textContent = data.intro.line1;
                 document.getElementById('intro-line2').textContent = data.intro.line2;
                 document.getElementById('intro-line3').textContent = data.intro.line3;
                 document.getElementById('intro-tagline').textContent = data.intro.from;
                 startStoryBtn.textContent = data.start;
+                document.getElementById('her-name-display').textContent = '...';
 
-                // Personal
                 document.getElementById('personal-title').textContent = data.personal.title;
                 document.getElementById('personal-text').innerHTML = data.personal.text.replace(/\n/g, '<br>');
                 document.getElementById('personal-next').textContent = data.personal.button;
 
-                // Why
                 document.getElementById('why-title').textContent = data.why.title;
                 const whyCards = data.why.cards;
                 for (let i = 0; i < 4; i++) {
@@ -1223,7 +1289,6 @@
                 }
                 document.getElementById('why-next').textContent = data.why.button;
 
-                // Timeline
                 document.getElementById('timeline-title').textContent = data.timeline.title;
                 const tlItems = data.timeline.items;
                 for (let i = 0; i < 3; i++) {
@@ -1232,7 +1297,6 @@
                 }
                 document.getElementById('timeline-next').textContent = data.timeline.button;
 
-                // Realized
                 document.getElementById('realized-line1').textContent = data.realized.line1;
                 document.getElementById('realized-line2').textContent = data.realized.line2;
                 document.getElementById('realized-line3').textContent = data.realized.line3;
@@ -1240,43 +1304,39 @@
                 document.getElementById('realized-line5').textContent = data.realized.line5;
                 document.getElementById('realized-next').textContent = data.realized.button;
 
-                // Heart
                 document.getElementById('heart-title').textContent = data.heart.title;
                 document.getElementById('heart-msg').textContent = data.heart.message;
                 document.getElementById('heart-next').textContent = data.heart.button;
 
-                // Confession
                 document.getElementById('confession-title').textContent = data.confession.title;
                 document.getElementById('confession-text').innerHTML = data.confession.text.replace(/\n/g, '<br>');
                 document.getElementById('confession-next').textContent = data.confession.button;
 
-                // Question
                 document.getElementById('question-title').textContent = data.question.title;
                 document.getElementById('proposal-question-display').textContent = data.question.question;
                 document.getElementById('question-sub').textContent = data.question.subtitle;
-                document.getElementById('choice-yes').innerHTML = data.question.choices.yes + ' <span class="sub">"' + data.question
-                    .choices.yesSub + '"</span>';
+                document.getElementById('choice-yes').innerHTML = data.question.choices.yes + ' <span class="sub">"' + data
+                    .question.choices.yesSub + '"</span>';
                 document.getElementById('choice-maybe').innerHTML = data.question.choices.maybe + ' <span class="sub">"' + data
                     .question.choices.maybeSub + '"</span>';
-                document.getElementById('choice-no').innerHTML = data.question.choices.no + ' <span class="sub">"' + data.question
-                    .choices.noSub + '"</span>';
+                document.getElementById('choice-no').innerHTML = data.question.choices.no + ' <span class="sub">"' + data
+                    .question.choices.noSub + '"</span>';
 
-                // Final
                 document.getElementById('final-title').textContent = data.final.title;
                 document.getElementById('final-text').innerHTML = data.final.text.replace(/\n/g, '<br>');
                 document.getElementById('final-from').textContent = data.final.from;
 
-                // Secret
                 document.querySelector('#secret-reveal p:first-child').textContent = data.secret.title;
                 document.querySelector('#secret-reveal .big').innerHTML = data.secret.message.replace(/\n/g, '<br>');
                 document.querySelector('#secret-reveal .highlight').textContent = data.secret.subtitle;
                 document.getElementById('close-secret').textContent = data.secret.close;
 
-                // Back button
-                backBtn.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg> ' + data.back;
-
-                // Title
                 document.title = '💜 ' + data.intro.title;
+
+                // Update language dropdown active state
+                document.querySelectorAll('.lang-dropdown button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.lang === currentLang);
+                });
             }
 
             // ---- progress dots ----
@@ -1303,7 +1363,6 @@
                 });
                 currentSection = index;
                 updateDots(index);
-                backBtn.classList.toggle('hidden', index === 0);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
 
@@ -1318,6 +1377,25 @@
                     showSection(currentSection - 1);
                 }
             }
+
+            // ---- swipe handling ----
+            document.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            document.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                const diff = touchStartX - touchEndX;
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) {
+                        // Swipe left - go forward
+                        nextSection();
+                    } else {
+                        // Swipe right - go back
+                        prevSection();
+                    }
+                }
+            }, { passive: true });
 
             // ---- loading flow ----
             setTimeout(() => {
@@ -1351,7 +1429,6 @@
             document.getElementById('realized-next').addEventListener('click', nextSection);
             document.getElementById('heart-next').addEventListener('click', nextSection);
             document.getElementById('confession-next').addEventListener('click', nextSection);
-            backBtn.addEventListener('click', prevSection);
 
             // ---- why you cards interaction ----
             document.querySelectorAll('#why-cards .memory-card').forEach(card => {
@@ -1437,15 +1514,23 @@
                 }
             }
 
-            // ---- language switch ----
-            langBtn.addEventListener('click', function() {
-                const langs = ['en', 'hi', 'vi'];
-                let idx = langs.indexOf(currentLang);
-                idx = (idx + 1) % langs.length;
-                currentLang = langs[idx];
-                updateTexts();
-                // Update her name display
-                document.getElementById('her-name-display').textContent = '...';
+            // ---- language dropdown ----
+            langBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                langDropdown.classList.toggle('show');
+            });
+
+            document.querySelectorAll('.lang-dropdown button').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    currentLang = this.dataset.lang;
+                    langDropdown.classList.remove('show');
+                    updateTexts();
+                });
+            });
+
+            document.addEventListener('click', function() {
+                langDropdown.classList.remove('show');
             });
 
             // ---- theme switch ----
@@ -1565,8 +1650,8 @@
                     const active = document.activeElement;
                     if (active && active.classList.contains('btn')) active.click();
                 }
-                if (e.key === 'ArrowLeft' && currentSection > 0) prevSection();
-                if (e.key === 'ArrowRight' && currentSection < totalSections - 1) nextSection();
+                if (e.key === 'ArrowLeft') prevSection();
+                if (e.key === 'ArrowRight') nextSection();
             });
 
             console.log('💜 Made with love for you.');
