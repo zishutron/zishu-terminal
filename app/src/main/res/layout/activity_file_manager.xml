@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/term_dark_bg">
+
+    <TextView
+        android:id="@+id/pathText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textColor="@color/term_dark_accent"
+        android:textSize="13sp"
+        android:typeface="monospace"
+        android:text="/" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <Button android:id="@+id/btnUp" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text=".." android:textSize="12sp"/>
+        <Button android:id="@+id/btnRefresh" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="Refresh" android:textSize="12sp"/>
+        <Button android:id="@+id/btnNewFolder" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="+ Folder" android:textSize="12sp"/>
+        <Button android:id="@+id/btnNewFile" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="+ File" android:textSize="12sp"/>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/fileList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="#FF222222"
+        android:dividerHeight="1dp" />
+</LinearLayout>

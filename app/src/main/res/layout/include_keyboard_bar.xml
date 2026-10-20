@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FF0E0E0E"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp">
+
+        <Button android:id="@+id/kbEsc"   style="@style/KbKey" android:text="ESC"/>
+        <Button android:id="@+id/kbTab"   style="@style/KbKey" android:text="TAB"/>
+        <Button android:id="@+id/kbCtrl"  style="@style/KbKey" android:text="CTRL"/>
+        <Button android:id="@+id/kbAlt"   style="@style/KbKey" android:text="ALT"/>
+        <Button android:id="@+id/kbUp"    style="@style/KbKey" android:text="↑"/>
+        <Button android:id="@+id/kbDown"  style="@style/KbKey" android:text="↓"/>
+        <Button android:id="@+id/kbLeft"  style="@style/KbKey" android:text="←"/>
+        <Button android:id="@+id/kbRight" style="@style/KbKey" android:text="→"/>
+        <Button android:id="@+id/kbSlash" style="@style/KbKey" android:text="/"/>
+        <Button android:id="@+id/kbTilde" style="@style/KbKey" android:text="~"/>
+        <Button android:id="@+id/kbDollar" style="@style/KbKey" android:text="$"/>
+        <Button android:id="@+id/kbPipe"  style="@style/KbKey" android:text="|"/>
+        <Button android:id="@+id/kbDash"  style="@style/KbKey" android:text="-"/>
+        <Button android:id="@+id/kbDot"   style="@style/KbKey" android:text="."/>
+        <Button android:id="@+id/kbStar"  style="@style/KbKey" android:text="*"/>
+        <Button android:id="@+id/kbQuote" style="@style/KbKey" android:text="&quot;"/>
+    </LinearLayout>
+</HorizontalScrollView>

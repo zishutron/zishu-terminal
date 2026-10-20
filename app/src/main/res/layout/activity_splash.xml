@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/term_dark_bg">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/zishu_launcher"
+            android:contentDescription="@string/app_name" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="v6.0.0"
+            android:textColor="#FFFFAA55"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.3" />
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/term_dark_bg">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bar_height"
+        android:orientation="horizontal"
+        android:background="@color/bar_bg_dark"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/topLogo"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="6dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/zishu_launcher"
+            android:contentDescription="@string/app_name" />
+
+        <TextView
+            android:id="@+id/sessionLabel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="Terminal 1"
+            android:textColor="@color/bar_fg_dark"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btnClearTop"
+            style="@style/BarButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/btn_clear" />
+
+        <Button
+            android:id="@+id/btnMenu"
+            style="@style/BarButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/btn_menu" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/topDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_dark" />
+
+    <!-- Scroll area -->
+    <ScrollView
+        android:id="@+id/scrollOutput"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtOutput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/term_pad_default"
+                android:textColor="@color/term_dark_fg"
+                android:textSize="@dimen/term_font_default"
+                android:typeface="monospace"
+                android:textIsSelectable="true"
+                android:clickable="true"
+                android:longClickable="true"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:text="" />
+
+            <EditText
+                android:id="@+id/inputCommand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:cursorVisible="false"
+                android:imeOptions="actionSend|flagNoExtractUi|flagNoFullscreen"
+                android:inputType="text|textNoSuggestions|textVisiblePassword"
+                android:maxLines="1"
+                android:minHeight="1dp"
+                android:padding="0dp"
+                android:singleLine="true"
+                android:textColor="@android:color/transparent"
+                android:textColorHint="@android:color/transparent"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/term_font_default"
+                android:typeface="monospace"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Keyboard Bar -->
+    <include layout="@layout/include_keyboard_bar"
+        android:id="@+id/keyboardBarContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/term_dark_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Font size (sp)" android:textColor="@color/term_dark_accent"
+            android:textSize="13sp"/>
+
+        <SeekBar android:id="@+id/seekFontSize"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:max="20" />
+
+        <TextView android:id="@+id/labelFontSize"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textColor="@color/term_dark_fg" android:textSize="12sp"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="Terminal padding (dp)" android:textColor="@color/term_dark_accent"
+            android:textSize="13sp"/>
+
+        <SeekBar android:id="@+id/seekPadding"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:max="32" />
+
+        <TextView android:id="@+id/labelPadding"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textColor="@color/term_dark_fg" android:textSize="12sp"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="Theme" android:textColor="@color/term_dark_accent"
+            android:textSize="13sp"/>
+
+        <RadioGroup android:id="@+id/themeGroup"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton android:id="@+id/themeDark"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Dark Terminal" android:textColor="@color/term_dark_fg"/>
+            <RadioButton android:id="@+id/themeLight"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Light Terminal" android:textColor="@color/term_dark_fg"/>
+            <RadioButton android:id="@+id/themeGreen"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Soft Green" android:textColor="@color/term_dark_fg"/>
+        </RadioGroup>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="Cursor style" android:textColor="@color/term_dark_accent"
+            android:textSize="13sp"/>
+
+        <Spinner android:id="@+id/spinnerCursor"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <CheckBox android:id="@+id/chkCursorBlink"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Cursor blink" android:textColor="@color/term_dark_fg"/>
+
+        <CheckBox android:id="@+id/chkTimestamps"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Show timestamps" android:textColor="@color/term_dark_fg"/>
+
+        <CheckBox android:id="@+id/chkKeepAwake"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Keep screen awake" android:textColor="@color/term_dark_fg"/>
+
+        <CheckBox android:id="@+id/chkConfirmClear"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Confirm before clearing" android:textColor="@color/term_dark_fg"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="Command history size" android:textColor="@color/term_dark_accent"
+            android:textSize="13sp"/>
+
+        <EditText android:id="@+id/editHistorySize"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:inputType="number"
+            android:textColor="@color/term_dark_fg"
+            android:textColorHint="#FF666666"
+            android:hint="500"/>
+
+        <!-- ============================================================ -->
+        <!-- Startup & Home Customization                                 -->
+        <!-- ============================================================ -->
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:layout_marginTop="20dp" android:layout_marginBottom="10dp"
+            android:background="#33FFFFFF"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="── Startup &amp; Home ──"
+            android:textColor="@color/term_dark_accent"
+            android:textStyle="bold" android:textSize="14sp"/>
+
+        <CheckBox android:id="@+id/chkBannerEnabled"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Show startup banner"
+            android:textColor="@color/term_dark_fg"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Banner style"
+            android:textColor="@color/term_dark_accent" android:textSize="13sp"/>
+
+        <Spinner android:id="@+id/spinnerBannerStyle"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Banner color"
+            android:textColor="@color/term_dark_accent" android:textSize="13sp"/>
+
+        <Spinner android:id="@+id/spinnerBannerColor"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Custom banner (used when style = Custom)"
+            android:textColor="@color/term_dark_accent" android:textSize="13sp"/>
+
+        <EditText android:id="@+id/editCustomBanner"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:minLines="3" android:gravity="top|start"
+            android:inputType="textMultiLine"
+            android:hint="Paste your ASCII art here"
+            android:textColorHint="#FF666666"
+            android:textColor="@color/term_dark_fg"
+            android:fontFamily="monospace"
+            android:textSize="11sp"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Welcome message"
+            android:textColor="@color/term_dark_accent" android:textSize="13sp"/>
+
+        <EditText android:id="@+id/editWelcomeText"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="Welcome back, zishu!"
+            android:textColorHint="#FF666666"
+            android:textColor="@color/term_dark_fg"/>
+
+        <CheckBox android:id="@+id/chkShowVersion"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Show version in banner"
+            android:textColor="@color/term_dark_fg"/>
+
+        <CheckBox android:id="@+id/chkShowDate"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Show date/time in banner"
+            android:textColor="@color/term_dark_fg"/>
+
+        <CheckBox android:id="@+id/chkShowDevice"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Show device info in banner"
+            android:textColor="@color/term_dark_fg"/>
+
+        <!-- ============================================================ -->
+        <!-- Save / Reset buttons                                          -->
+        <!-- ============================================================ -->
+
+        <Button android:id="@+id/btnSaveSettings"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Save Settings" />
+
+        <Button android:id="@+id/btnResetSettings"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Reset to Defaults" />
+    </LinearLayout>
+</ScrollView>

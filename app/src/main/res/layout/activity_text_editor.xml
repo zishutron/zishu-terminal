@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/term_dark_bg">
+
+    <TextView
+        android:id="@+id/editorPath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:background="@color/bar_bg_dark"
+        android:textColor="@color/term_dark_accent"
+        android:textSize="12sp"
+        android:typeface="monospace"
+        android:singleLine="true"
+        android:text="(unsaved)" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:background="@color/bar_bg_dark">
+
+        <Button android:id="@+id/btnSave" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="Save" android:textSize="12sp"/>
+        <Button android:id="@+id/btnSaveAs" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="Save As" android:textSize="12sp"/>
+        <Button android:id="@+id/btnSearch" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="Find" android:textSize="12sp"/>
+        <Button android:id="@+id/btnUndo" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="Undo" android:textSize="12sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/lineNumbers"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:background="#FF060A06"
+            android:gravity="right"
+            android:paddingTop="8dp"
+            android:paddingRight="6dp"
+            android:textColor="#FF557755"
+            android:textSize="12sp"
+            android:typeface="monospace"
+            android:text="1" />
+
+        <EditText
+            android:id="@+id/editorText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/term_dark_bg"
+            android:gravity="top|start"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="8dp"
+            android:textColor="@color/term_dark_fg"
+            android:textSize="13sp"
+            android:typeface="monospace"
+            android:scrollHorizontally="false" />
+    </LinearLayout>
+</LinearLayout>
