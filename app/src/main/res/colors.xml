@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="term_dark_bg">#FF0B0F0C</color>
+    <color name="term_dark_fg">#FFD3FFD3</color>
+    <color name="term_dark_accent">#FF7CFF7C</color>
+    <color name="term_light_bg">#FFF7F7F7</color>
+    <color name="term_light_fg">#FF1A1A1A</color>
+    <color name="term_light_accent">#FF006600</color>
+    <color name="term_green_bg">#FF0A1A0F</color>
+    <color name="term_green_fg">#FFB6FFB6</color>
+    <color name="term_green_accent">#FF4CFF4C</color>
+
+    <color name="bar_bg_dark">#FF141414</color>
+    <color name="bar_bg_light">#FFEAEAEA</color>
+    <color name="bar_fg_dark">#FFE8E8E8</color>
+    <color name="bar_fg_light">#FF111111</color>
+    <color name="divider_dark">#FF2A2A2A</color>
+    <color name="divider_light">#FFCCCCCC</color>
+</resources>
