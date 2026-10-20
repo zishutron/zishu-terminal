@@ -55,10 +55,10 @@ jobs:
             || { echo "::error::Beta branding found"; exit 1; }
 
       - name: Unit tests
-        run: ./gradlew --no-daemon testDebugUnitTest
+        run: bash ./gradlew --no-daemon testDebugUnitTest
 
       - name: Build debug APK
-        run: ./gradlew --no-daemon assembleDebug
+        run: bash ./gradlew --no-daemon assembleDebug
 
       - name: Verify APK metadata
         run: |
