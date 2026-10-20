@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Zishu Terminal</string>
+
+    <string name="app_version_label">v6.0.0</string>
+    <string name="app_channel">Stable</string>
+
+    <string name="title_files">Files</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_sysinfo">System Info</string>
+    <string name="title_about">About</string>
+    <string name="title_history">Command History</string>
+    <string name="title_sessions">Sessions</string>
+    <string name="title_diagnostics">Diagnostics</string>
+    <string name="title_packages">Packages (zpkg)</string>
+    <string name="title_projects">Projects</string>
+    <string name="title_tools">Tools</string>
+    <string name="title_jobs">Jobs</string>
+    <string name="title_help">Help</string>
+    <string name="title_server">Server</string>
+
+    <string name="hint_command">Enter command…</string>
+    <string name="btn_run">Run</string>
+    <string name="btn_clear">Clear</string>
+    <string name="btn_menu">Menu</string>
+
+    <string name="menu_new_session">New Session</string>
+    <string name="menu_sessions">Sessions</string>
+    <string name="menu_files">Files</string>
+    <string name="menu_editor">Text Editor</string>
+    <string name="menu_history">Command History</string>
+    <string name="menu_sysinfo">System Info</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_about">About</string>
+    <string name="menu_restart">Restart Shell</string>
+    <string name="menu_clear">Clear Terminal</string>
+    <string name="menu_exit">Exit</string>
+    <string name="menu_diagnostics">Diagnostics</string>
+    <string name="menu_packages">Packages</string>
+    <string name="menu_projects">Projects</string>
+    <string name="menu_backup">Backup / Restore</string>
+</resources>

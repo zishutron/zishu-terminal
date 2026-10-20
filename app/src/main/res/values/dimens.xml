@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bar_height">48dp</dimen>
+    <dimen name="term_pad_default">8dp</dimen>
+    <dimen name="term_font_default">14sp</dimen>
+</resources>

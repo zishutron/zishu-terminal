@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Main app theme — dark, no ActionBar -->
+    <style name="AppTheme" parent="@android:style/Theme.Holo.NoActionBar">
+        <item name="android:windowBackground">@color/term_dark_bg</item>
+        <item name="android:colorBackground">@color/term_dark_bg</item>
+        <item name="android:textColorPrimary">#FFE8E8E8</item>
+        <item name="android:textColorSecondary">#FFAAAAAA</item>
+        <item name="android:textColorHint">#FF666666</item>
+    </style>
+
+    <!-- Splash theme — fullscreen, dark -->
+    <style name="SplashTheme" parent="@android:style/Theme.Holo.NoActionBar">
+        <item name="android:windowBackground">@color/term_dark_bg</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <!-- Custom top bar button style -->
+    <style name="BarButton">
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/bar_fg_dark</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <!-- v5.0 keyboard quick-access key — bigger, easier to tap -->
+    <style name="KbKey">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">52dp</item>
+        <item name="android:minHeight">44dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFE8E8E8</item>
+        <item name="android:background">#FF1A1A1A</item>
+        <item name="android:layout_marginLeft">2dp</item>
+        <item name="android:layout_marginRight">2dp</item>
+    </style>
+</resources>
