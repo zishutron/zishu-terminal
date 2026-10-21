@@ -1,0 +1,61 @@
+name: Generate Repo Key
+
+# One-time: creates the GPG key that signs the Zishu apt repository.
+#  - public key  -> committed to repo-keys/ (apt in the app trusts it)
+#  - private key -> uploaded as a 1-day artifact. Copy it into the repository secret
+#                   ZISHU_REPO_GPG_PRIVATE, then DELETE the artifact.
+# This key only signs the apt repository. It has nothing to do with APK signing.
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Overwrite an existing key (apps built with the old key will stop trusting the repo)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  genkey:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Refuse to overwrite an existing key
+        if: ${{ !inputs.force }}
+        run: |
+          if [ -f repo-keys/zishu-repo.gpg ]; then
+            echo "::error::repo-keys/zishu-repo.gpg already exists. Re-run with force=true only if you really want a new key."
+            exit 1
+          fi
+
+      - name: Generate key
+        run: |
+          export GNUPGHOME=$(mktemp -d); chmod 700 "$GNUPGHOME"
+          gpg --batch --passphrase '' --quick-generate-key "Zishu Terminal Repo <zishu-repo@users.noreply.github.com>" rsa4096 sign never
+          FPR=$(gpg --list-keys --with-colons | awk -F: '/^fpr/{print $10; exit}')
+          mkdir -p repo-keys
+          gpg --export "$FPR" > repo-keys/zishu-repo.gpg
+          gpg --armor --export "$FPR" > repo-keys/zishu-repo.asc
+          mkdir -p "$RUNNER_TEMP/private"
+          gpg --armor --export-secret-keys "$FPR" > "$RUNNER_TEMP/private/ZISHU_REPO_GPG_PRIVATE.txt"
+          echo "Fingerprint: $FPR"
+          echo "### Repo key created" >> "$GITHUB_STEP_SUMMARY"
+          echo "Fingerprint: \`$FPR\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit public key
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add repo-keys
+          git commit -m "Add Zishu apt repo public key"
+          git push
+
+      - name: Upload private key (1 day)
+        uses: actions/upload-artifact@v4
+        with:
+          name: PRIVATE-repo-key-delete-after-use
+          path: ${{ runner.temp }}/private/ZISHU_REPO_GPG_PRIVATE.txt
+          retention-days: 1
