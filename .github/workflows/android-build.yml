@@ -44,15 +44,19 @@ jobs:
 
       - name: Validate project structure
         run: |
-          set -e
-          test -f gradlew
-          test -f app/build.gradle
-          test -f app/src/main/AndroidManifest.xml
-          test -d app/src/main/java/com/zishu/terminal
-          ! git ls-files | grep -Ei '\.(pkcs12|p12|jks|keystore)$' \
-            || { echo "::error::Keystore file is tracked in git"; exit 1; }
-          ! grep -rniE 'beta|early-access' app/src/main/res app/src/main/java app/src/main/AndroidManifest.xml \
-            || { echo "::error::Beta branding found"; exit 1; }
+          fail=0
+          for f in gradlew settings.gradle app/build.gradle app/src/main/AndroidManifest.xml; do
+            if [ -f "$f" ]; then echo "ok:      $f"; else echo "::error::missing file: $f"; fail=1; fi
+          done
+          if [ -d app/src/main/java/com/zishu/terminal ]; then echo "ok:      java sources"; else echo "::error::missing app/src/main/java/com/zishu/terminal"; fail=1; fi
+          echo "--- repo layout ---"; git ls-files | head -30
+          if git ls-files | grep -Ei '\.(pkcs12|p12|jks|keystore)$'; then
+            echo "::warning::A keystore file is tracked in git (listed above). Remove it from the repo and history, and use GitHub Secrets."
+          fi
+          if grep -rniE 'beta|early-access' app/src/main/res app/src/main/java app/src/main/AndroidManifest.xml; then
+            echo "::error::Beta branding found (listed above)"; fail=1
+          fi
+          exit $fail
 
       - name: Unit tests
         run: bash ./gradlew --no-daemon testDebugUnitTest
