@@ -2,14 +2,6 @@ plugins {
     id 'com.android.application'
 }
 
-// Release signing comes only from environment variables (GitHub Actions secrets).
-// Nothing secret is stored in the repository.
-def ksPath  = System.getenv("ANDROID_KEYSTORE_PATH")
-def ksPass  = System.getenv("ANDROID_KEYSTORE_PASSWORD")
-def ksAlias = System.getenv("ANDROID_KEY_ALIAS")
-def keyPass = System.getenv("ANDROID_KEY_PASSWORD")
-def haveSigning = ksPath && ksPass && ksAlias && keyPass && file(ksPath).exists()
-
 android {
     namespace 'com.zishu.terminal'
     compileSdk 34
@@ -17,28 +9,14 @@ android {
     defaultConfig {
         applicationId 'com.zishu.terminal'
         minSdk 21
-        targetSdk 29
+        targetSdk 28
         versionCode 600
         versionName '6.0.0'
-    }
-
-    signingConfigs {
-        if (haveSigning) {
-            release {
-                storeFile file(ksPath)
-                storePassword ksPass
-                keyAlias ksAlias
-                keyPassword keyPass
-            }
-        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            if (haveSigning) {
-                signingConfig signingConfigs.release
-            }
         }
     }
 
