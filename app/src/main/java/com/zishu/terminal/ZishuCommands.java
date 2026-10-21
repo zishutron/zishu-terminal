@@ -76,6 +76,7 @@ public class ZishuCommands {
 
         if (!cmd.startsWith("z")) return false;
 
+        if (cmd.equals("zbootstrap"))   { zbootstrap(parts); return true; }
         if (cmd.equals("zhelp"))        { help(parts); return true; }
         if (cmd.equals("zinfo"))        { info(); return true; }
         if (cmd.equals("zclear"))       { host.clearScreen(); return true; }
@@ -107,6 +108,36 @@ public class ZishuCommands {
         if (cmd.equals("zbanner"))      { zbanner(parts); return true; }
         if (cmd.equals("zprompt"))      { zprompt(parts); return true; }
         return false;
+    }
+
+    // ============================================================
+    // BOOTSTRAP (real userspace)
+    // ============================================================
+
+    private void zbootstrap(String[] parts) {
+        final BootstrapManager bm = new BootstrapManager(ctx);
+        String sub = parts.length > 1 ? parts[1] : "status";
+        if (sub.equals("status")) {
+            host.print("ABI:       " + String.valueOf(BootstrapManager.detectArch()));
+            host.print("Userspace: " + (bm.isInstalled() ? "installed (bash, real binaries)" : "NOT installed (Android sh only)"));
+            if (!bm.isInstalled()) host.print("Run: zbootstrap install");
+        } else if (sub.equals("install")) {
+            host.print("Installing bootstrap in background ...");
+            final android.os.Handler ui = new android.os.Handler(android.os.Looper.getMainLooper());
+            new Thread(new Runnable() {
+                @Override public void run() {
+                    boolean ok = bm.install(new BootstrapManager.Log() {
+                        @Override public void line(final String s) {
+                            ui.post(new Runnable() { @Override public void run() { host.print(s); } });
+                        }
+                    });
+                    final String done = ok ? "zbootstrap: OK" : "zbootstrap: FAILED";
+                    ui.post(new Runnable() { @Override public void run() { host.print(done); } });
+                }
+            }).start();
+        } else {
+            host.print("Usage: zbootstrap [status|install]");
+        }
     }
 
     // ============================================================

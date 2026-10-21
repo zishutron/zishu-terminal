@@ -39,6 +39,15 @@ public class ShellProcess {
     /** How long the reader sleeps between availability checks. */
     private static final long POLL_SLEEP_MS = 15L;
 
+    private static volatile String shellPath = "/system/bin/sh";
+    private static volatile java.util.Map<String, String> extraEnv = null;
+
+    /** Set the shell binary and environment used for new sessions. */
+    public static void configure(String shell, java.util.Map<String, String> env) {
+        shellPath = shell == null ? "/system/bin/sh" : shell;
+        extraEnv = env;
+    }
+
     private Process process;
     private OutputStreamWriter stdin;
     private Thread stdoutThread;
@@ -62,7 +71,10 @@ public class ShellProcess {
         try {
             // Non-interactive shell — no -i flag.
             // This prevents the shell from printing prompts to stderr.
-            ProcessBuilder pb = new ProcessBuilder("/system/bin/sh");
+            ProcessBuilder pb;
+            if (shellPath.endsWith("/bash")) pb = new ProcessBuilder(shellPath, "--noprofile", "--norc");
+            else pb = new ProcessBuilder(shellPath);
+            if (extraEnv != null) pb.environment().putAll(extraEnv);
 
             if (cwd != null) {
                 File dir = new File(cwd);

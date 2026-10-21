@@ -2,7 +2,9 @@ package com.zishu.terminal;
 
 import android.content.Context;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -19,6 +21,59 @@ public final class ZishuEnv {
     public ZishuEnv(Context c) {
         this.ctx = c.getApplicationContext();
         this.filesDir = this.ctx.getFilesDir();
+    }
+
+    public File getFilesRoot() { return filesDir; }
+
+    /** True only when the real bootstrap was installed AND verified (marker + bash present). */
+    public boolean isBootstrapInstalled() {
+        return new File(getPrefix(), ".zishu_bootstrap_ok").isFile()
+                && new File(getBinDir(), "bash").exists();
+    }
+
+    public String shellPath() {
+        return isBootstrapInstalled() ? new File(getBinDir(), "bash").getAbsolutePath() : "/system/bin/sh";
+    }
+
+    /** Environment for child processes (real userspace only; empty extras for the Android sh fallback). */
+    public Map<String, String> processEnv() {
+        Map<String, String> m = new LinkedHashMap<String, String>(asMap());
+        if (isBootstrapInstalled()) {
+            m.put("LANG", "en_US.UTF-8");
+            m.put("TERM", "xterm-256color");
+            m.put("COLORTERM", "truecolor");
+            m.put("ANDROID_DATA", "/data");
+            m.put("ANDROID_ROOT", "/system");
+            File pre = new File(getLibDir(), "libtermux-exec-ld-preload.so");
+            if (!pre.isFile()) pre = new File(getLibDir(), "libtermux-exec.so");
+            if (pre.isFile()) m.put("LD_PRELOAD", pre.getAbsolutePath());
+        }
+        return m;
+    }
+
+    /** Point ShellProcess at the current shell + environment. */
+    public void applyToShellProcess() {
+        ShellProcess.configure(shellPath(), processEnv());
+    }
+
+    /** Run a command with the userspace env, return combined output (null on failure). Blocking. */
+    public String runAndCapture(String[] cmd) {
+        try {
+            ProcessBuilder pb = new ProcessBuilder(cmd);
+            pb.environment().putAll(processEnv());
+            pb.directory(getHome());
+            pb.redirectErrorStream(true);
+            Process p = pb.start();
+            InputStream in = p.getInputStream();
+            ByteArrayOutputStream bo = new ByteArrayOutputStream();
+            byte[] buf = new byte[4096];
+            int n;
+            while ((n = in.read(buf)) > 0) bo.write(buf, 0, n);
+            p.waitFor();
+            return bo.toString("UTF-8");
+        } catch (Throwable t) {
+            return "exec failed: " + t;
+        }
     }
 
     public File getPrefix() { return new File(filesDir, "usr"); }
@@ -51,7 +106,7 @@ public final class ZishuEnv {
         m.put("TMPDIR", getTmp().getAbsolutePath());
         // PATH includes Zishu bin + android system bin so real commands are found.
         m.put("PATH", getBinDir().getAbsolutePath() + ":/system/bin:/system/xbin");
-        m.put("SHELL", "/system/bin/sh");
+        m.put("SHELL", shellPath());
         return m;
     }
 

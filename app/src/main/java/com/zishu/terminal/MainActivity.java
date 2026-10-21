@@ -89,6 +89,7 @@ public class MainActivity extends Activity {
         mgr = SessionManager.get();
         env = new ZishuEnv(this);
         env.ensureAll();
+        env.applyToShellProcess();
         ansi = new AnsiParser();
 
         fontSize = Prefs.getInt(this, Prefs.KEY_FONT_SIZE, Prefs.DEFAULT_FONT_SIZE);
