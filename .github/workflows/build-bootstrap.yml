@@ -1,0 +1,137 @@
+name: Build Bootstrap
+
+# Builds the Termux userspace (bash, coreutils, apt, curl, ...) FROM SOURCE with the
+# prefix /data/data/com.zishu.terminal/files/usr, using the upstream termux-packages
+# build system (Apache-2.0 build scripts; each package keeps its own upstream license).
+# Official Termux binaries cannot be reused: they have /data/data/com.termux hard-coded.
+#
+# Output: bootstrap-<arch>.zip + SHA-256, attached to a GitHub Release.
+# The app downloads that zip and verifies it against the SHA-256 pinned in
+# app/src/main/assets/bootstrap.properties.
+
+on:
+  workflow_dispatch:
+    inputs:
+      arch:
+        description: "Architecture (aarch64 = arm64 phones, arm = 32-bit phones)"
+        default: aarch64
+        type: choice
+        options: [aarch64, arm]
+      extra_packages:
+        description: "Extra packages to BUILD and BUNDLE in the bootstrap (e.g. 'python git'). Empty = core only"
+        default: ""
+        type: string
+      termux_ref:
+        description: "termux-packages git ref (branch/tag/commit)"
+        default: master
+        type: string
+      publish:
+        description: "Publish as GitHub Release"
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+env:
+  APP_PACKAGE: com.zishu.terminal
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    permissions:
+      contents: write   # only to create the release
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android /opt/hostedtoolcache/CodeQL
+          df -h /
+
+      - name: Fetch termux-packages
+        run: |
+          git clone https://github.com/termux/termux-packages.git tp
+          cd tp
+          git checkout "${{ inputs.termux_ref }}"
+          echo "TP_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          git rev-parse HEAD
+
+      - name: Patch app package name
+        working-directory: tp
+        run: |
+          sed -i "s|^TERMUX_APP__PACKAGE_NAME=\"com.termux\"|TERMUX_APP__PACKAGE_NAME=\"$APP_PACKAGE\"|" scripts/properties.sh
+          grep -n '^TERMUX_APP__PACKAGE_NAME=' scripts/properties.sh
+          grep -q "^TERMUX_APP__PACKAGE_NAME=\"$APP_PACKAGE\"" scripts/properties.sh
+
+      - name: Build builder image (prefix baked into the image)
+        working-directory: tp
+        run: docker build -t zishu-package-builder -f scripts/Dockerfile scripts/
+
+      - name: Build packages from source
+        working-directory: tp
+        run: |
+          BOOT_PKGS="apt bash bzip2 command-not-found coreutils curl dash diffutils findutils gawk grep gzip less procps psmisc sed tar termux-core termux-exec termux-keyring termux-tools util-linux xz-utils ed debianutils dos2unix inetutils lsof nano net-tools patch unzip"
+          export TERMUX_BUILDER_IMAGE_NAME=zishu-package-builder
+          export CONTAINER_NAME=zishu-builder
+          ./scripts/run-docker.sh ./build-package.sh -a "${{ inputs.arch }}" -o /home/builder/termux-packages/output $BOOT_PKGS ${{ inputs.extra_packages }}
+          ls -la output | head -80
+
+      - name: Create local apt repository from built .deb files
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq dpkg-dev zip jq binutils xz-utils
+          mkdir -p repo/dists/stable/main/binary-${{ inputs.arch }}
+          cp tp/output/*.deb repo/
+          (cd repo && dpkg-scanpackages -m . > dists/stable/main/binary-${{ inputs.arch }}/Packages)
+          grep -c '^Package:' repo/dists/stable/main/binary-${{ inputs.arch }}/Packages
+
+      - name: Assemble bootstrap zip
+        working-directory: tp
+        run: |
+          ADD=""
+          [ -n "${{ inputs.extra_packages }}" ] && ADD="--add $(echo '${{ inputs.extra_packages }}' | tr ' ' ',')"
+          ./scripts/generate-bootstraps.sh --architectures "${{ inputs.arch }}" --repository "file://$GITHUB_WORKSPACE/repo" $ADD
+          ls -la *.zip
+
+      - name: Verify the prefix is really com.zishu.terminal
+        working-directory: tp
+        run: |
+          mkdir chk && cd chk && unzip -q ../bootstrap-${{ inputs.arch }}.zip
+          if grep -rIl "/data/data/com.termux/" . | head -5 | grep .; then
+            echo "::error::Files above still reference /data/data/com.termux"; exit 1
+          fi
+          grep -rIl "/data/data/$APP_PACKAGE/files/usr" . | head -3
+          test -f SYMLINKS.txt && head -3 SYMLINKS.txt
+
+      - name: Checksum
+        working-directory: tp
+        run: |
+          mkdir -p ../dist
+          cp bootstrap-${{ inputs.arch }}.zip ../dist/
+          cd ../dist && sha256sum bootstrap-${{ inputs.arch }}.zip | tee bootstrap-${{ inputs.arch }}.zip.sha256
+          {
+            echo "### Bootstrap ${{ inputs.arch }}"
+            echo "termux-packages commit: \`$TP_SHA\`"
+            echo "Paste into app/src/main/assets/bootstrap.properties:"
+            echo '```'
+            echo "${{ inputs.arch }}.sha256=$(cut -d' ' -f1 bootstrap-${{ inputs.arch }}.zip.sha256)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bootstrap-${{ inputs.arch }}
+          path: dist/*
+          if-no-files-found: error
+
+      - name: Publish release
+        if: inputs.publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="bootstrap-$(date +%Y.%m.%d)-${{ inputs.arch }}-${GITHUB_RUN_NUMBER}"
+          gh release create "$TAG" dist/* --title "Bootstrap ${{ inputs.arch }} ($TAG)" \
+            --notes "Built from termux-packages $TP_SHA with prefix /data/data/$APP_PACKAGE/files/usr. SHA-256 is in the .sha256 file; pin it in the app."
+          echo "Release tag: $TAG" >> "$GITHUB_STEP_SUMMARY"
