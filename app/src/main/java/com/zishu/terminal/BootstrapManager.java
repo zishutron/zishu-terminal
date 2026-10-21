@@ -110,6 +110,7 @@ public class BootstrapManager {
             deleteRecursive(staging);
             if (!staging.mkdirs()) { log.line("Cannot create " + staging); return false; }
             extract(zip, staging, log);
+            patchOldPrefix(staging, log);
 
             // Swap in: keep the previous prefix (old zpkg data) as usr.pre-bootstrap.
             File usr = env.getPrefix();
@@ -248,6 +249,44 @@ public class BootstrapManager {
             catch (ErrnoException ex) { throw new IOException("symlink " + lnk + ": " + ex.getMessage()); }
         }
         log.line("Extracted " + files + " files, " + links + " symlinks.");
+    }
+
+    // Some upstream scripts (pkg, login, termux-reset, ...) keep the old com.termux path.
+    // Rewrite it in TEXT files only (ELF/binary files are never touched).
+    private static final String OLD_PREFIX = "/data/data/com.termux";
+    private static final String NEW_PREFIX = "/data/data/com.zishu.terminal";
+
+    private void patchOldPrefix(File dir, Log log) {
+        int[] count = new int[1];
+        patchWalk(dir, count);
+        log.line("Rewrote old prefix in " + count[0] + " text files.");
+    }
+
+    private static void patchWalk(File f, int[] count) {
+        if (isLink(f)) return;
+        if (f.isDirectory()) {
+            File[] cs = f.listFiles();
+            if (cs != null) for (int i = 0; i < cs.length; i++) patchWalk(cs[i], count);
+            return;
+        }
+        if (!f.isFile() || f.length() == 0 || f.length() > 2L * 1024 * 1024) return;
+        try {
+            byte[] data = new byte[(int) f.length()];
+            InputStream in = new FileInputStream(f);
+            try {
+                int off = 0, n;
+                while (off < data.length && (n = in.read(data, off, data.length - off)) > 0) off += n;
+            } finally { in.close(); }
+            if (data.length > 4 && data[0] == 0x7f && data[1] == 'E' && data[2] == 'L' && data[3] == 'F') return;
+            int lim = Math.min(data.length, 8000);
+            for (int i = 0; i < lim; i++) if (data[i] == 0) return;
+            String s = new String(data, "ISO-8859-1");   // byte-exact round trip
+            if (s.indexOf(OLD_PREFIX) < 0) return;
+            byte[] out = s.replace(OLD_PREFIX, NEW_PREFIX).getBytes("ISO-8859-1");
+            OutputStream fo = new FileOutputStream(f);    // keeps existing permissions
+            try { fo.write(out); } finally { fo.close(); }
+            count[0]++;
+        } catch (Throwable ignored) {}
     }
 
     private void runSecondStage(Log log) {
