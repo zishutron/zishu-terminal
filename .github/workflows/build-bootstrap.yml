@@ -172,14 +172,6 @@ jobs:
           path: dist/*
           if-no-files-found: error
 
-      - name: Keep all built .deb files (for the future apt repository)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: debs-${{ inputs.arch }}
-          path: tp/output/*.deb
-          retention-days: 30
-
       - name: Publish release
         if: inputs.publish
         env:
@@ -189,3 +181,19 @@ jobs:
           gh release create "$TAG" dist/* --title "Bootstrap ${{ inputs.arch }} ($TAG)" \
             --notes "Built from termux-packages $TP_SHA with prefix /data/data/$APP_PACKAGE/files/usr. SHA-256 is in the .sha256 file; pin it in the app."
           echo "Release tag: $TAG" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Pack all built .deb files (names contain ':' so they go in a tar)
+        if: always()
+        run: |
+          mkdir -p dist-debs
+          tar -cf dist-debs/debs-${{ inputs.arch }}.tar -C tp/output . || true
+
+      - name: Keep all built .deb files (for the future apt repository)
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: debs-${{ inputs.arch }}
+          path: dist-debs/debs-${{ inputs.arch }}.tar
+          retention-days: 30
+          if-no-files-found: ignore
