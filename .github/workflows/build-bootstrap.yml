@@ -18,8 +18,8 @@ on:
         type: choice
         options: [aarch64, arm]
       extra_packages:
-        description: "Extra packages to BUILD and BUNDLE in the bootstrap (e.g. 'python git'). Empty = core only"
-        default: ""
+        description: "Extra packages to BUILD and BUNDLE (space separated). Each is built separately; failures are skipped and listed in the summary"
+        default: "python python-pip git wget openssh"
         type: string
       termux_ref:
         description: "termux-packages git ref (branch/tag/commit)"
@@ -75,7 +75,18 @@ jobs:
           BOOT_PKGS="apt bash bzip2 command-not-found coreutils curl dash diffutils findutils gawk grep gzip less procps psmisc sed tar termux-core termux-exec termux-keyring termux-tools util-linux xz-utils ed debianutils dos2unix inetutils lsof nano net-tools patch unzip"
           export TERMUX_BUILDER_IMAGE_NAME=zishu-package-builder
           export CONTAINER_NAME=zishu-builder
-          ./scripts/run-docker.sh ./build-package.sh -a "${{ inputs.arch }}" -o /home/builder/termux-packages/output $BOOT_PKGS ${{ inputs.extra_packages }}
+          ARCH="${{ inputs.arch }}"
+          OUT=/home/builder/termux-packages/output
+          # Core must succeed.
+          ./scripts/run-docker.sh ./build-package.sh -a "$ARCH" -o "$OUT" $BOOT_PKGS
+          # Extras are built one by one so one failure does not lose everything.
+          OK_EXTRA=""; FAIL_EXTRA=""
+          for p in ${{ inputs.extra_packages }}; do
+            if ./scripts/run-docker.sh ./build-package.sh -a "$ARCH" -o "$OUT" "$p"; then OK_EXTRA="$OK_EXTRA $p"; else FAIL_EXTRA="$FAIL_EXTRA $p"; fi
+          done
+          echo "OK_EXTRA=$OK_EXTRA" >> "$GITHUB_ENV"
+          echo "FAIL_EXTRA=$FAIL_EXTRA" >> "$GITHUB_ENV"
+          { echo "### Extra packages"; echo "Bundled: ${OK_EXTRA:-none}"; echo "Failed (not bundled): ${FAIL_EXTRA:-none}"; } >> "$GITHUB_STEP_SUMMARY"
           ls -la output | head -80
 
       - name: Create local apt repository from built .deb files
@@ -91,7 +102,8 @@ jobs:
         working-directory: tp
         run: |
           ADD=""
-          [ -n "${{ inputs.extra_packages }}" ] && ADD="--add $(echo '${{ inputs.extra_packages }}' | tr ' ' ',')"
+          [ -n "$(echo $OK_EXTRA)" ] && ADD="--add $(echo $OK_EXTRA | tr ' ' ',')"
+          echo "Bundling: $OK_EXTRA"
           ./scripts/generate-bootstraps.sh --architectures "${{ inputs.arch }}" --repository "file://$GITHUB_WORKSPACE/repo" $ADD
           ls -la *.zip
 
@@ -125,6 +137,13 @@ jobs:
           name: bootstrap-${{ inputs.arch }}
           path: dist/*
           if-no-files-found: error
+
+      - name: Keep all built .deb files (for the future apt repository)
+        uses: actions/upload-artifact@v4
+        with:
+          name: debs-${{ inputs.arch }}
+          path: tp/output/*.deb
+          retention-days: 30
 
       - name: Publish release
         if: inputs.publish
