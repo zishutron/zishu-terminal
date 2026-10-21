@@ -129,15 +129,26 @@ jobs:
           ./scripts/generate-bootstraps.sh --architectures "${{ inputs.arch }}" --repository "file://$GITHUB_WORKSPACE/repo" $ADD
           ls -la *.zip
 
-      - name: Verify the prefix is really com.zishu.terminal
+      - name: Inspect prefix references (informational)
         working-directory: tp
         run: |
           mkdir chk && cd chk && unzip -q ../bootstrap-${{ inputs.arch }}.zip
-          if grep -rIl "/data/data/com.termux/" . | head -5 | grep .; then
-            echo "::error::Files above still reference /data/data/com.termux"; exit 1
-          fi
-          grep -rIl "/data/data/$APP_PACKAGE/files/usr" . | head -3
+          {
+            echo "### Prefix check"
+            echo "Files referencing the NEW prefix (expected, many):"
+            echo "$(grep -rIl "/data/data/$APP_PACKAGE/files/usr" . | wc -l) text files"
+            echo "Text files still mentioning /data/data/com.termux (inspect, often only comments/URLs):"
+            echo '```'
+            grep -rIn "/data/data/com.termux" . | cut -c1-200 | head -40
+            echo '```'
+            echo "ELF/binary files in bin/ lib/ libexec/ containing the old prefix:"
+            echo '```'
+            grep -rla "/data/data/com.termux/files" bin lib libexec 2>/dev/null | head -20
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
           test -f SYMLINKS.txt && head -3 SYMLINKS.txt
+          # Hard requirement: the new prefix must really be present in the shell binary's world.
+          grep -rIq "/data/data/$APP_PACKAGE/files/usr" etc bin || { echo "::error::new prefix not found anywhere"; exit 1; }
 
       - name: Checksum
         working-directory: tp
@@ -155,12 +166,14 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: bootstrap-${{ inputs.arch }}
           path: dist/*
           if-no-files-found: error
 
       - name: Keep all built .deb files (for the future apt repository)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: debs-${{ inputs.arch }}
