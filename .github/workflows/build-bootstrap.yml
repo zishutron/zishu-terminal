@@ -66,6 +66,29 @@ jobs:
           grep -n '^TERMUX_APP__PACKAGE_NAME=' scripts/properties.sh
           grep -q "^TERMUX_APP__PACKAGE_NAME=\"$APP_PACKAGE\"" scripts/properties.sh
 
+      - name: Use our own apt repository and signing key
+        run: |
+          [ -f repo-keys/zishu-repo.gpg ] || { echo "::error::repo-keys/zishu-repo.gpg missing. Run the 'Generate Repo Key' workflow first."; exit 1; }
+          OWNER="${GITHUB_REPOSITORY_OWNER,,}"; NAME="${GITHUB_REPOSITORY#*/}"
+          REPO_URL="https://${OWNER}.github.io/${NAME}/apt"
+          echo "REPO_URL=$REPO_URL" >> "$GITHUB_ENV"
+          cd tp
+          # apt sources.list -> our repo instead of packages.termux.dev
+          sed -i "s|https://packages-cf.termux.dev/apt/termux-main/|${REPO_URL}/|; s|https://packages.termux.dev/apt/termux-main/|${REPO_URL}/|" packages/apt/build.sh
+          grep -n "${REPO_URL}" packages/apt/build.sh
+          ! grep -n "termux.dev/apt" packages/apt/build.sh
+          # termux-keyring -> trust ONLY our key
+          cp ../repo-keys/zishu-repo.gpg packages/termux-keyring/zishu-repo.gpg
+          python3 - <<'PY'
+          import re
+          p='packages/termux-keyring/build.sh'
+          s=open(p).read()
+          s=re.sub(r'^\s*install -Dm600 "\$TERMUX_PKG_BUILDER_DIR/[^"]*\.gpg" "\$GPG_SHARE_DIR"\n','',s,flags=re.M)
+          s=s.replace('\tmkdir -p "$GPG_SHARE_DIR"\n','\tmkdir -p "$GPG_SHARE_DIR"\n\tinstall -Dm600 "$TERMUX_PKG_BUILDER_DIR/zishu-repo.gpg" "$GPG_SHARE_DIR"\n',1)
+          open(p,'w').write(s)
+          PY
+          grep -n "install -Dm600" packages/termux-keyring/build.sh
+
       - name: Build builder image (prefix baked into the image)
         working-directory: tp
         run: docker build -t zishu-package-builder -f scripts/Dockerfile scripts/
@@ -181,6 +204,54 @@ jobs:
           gh release create "$TAG" dist/* --title "Bootstrap ${{ inputs.arch }} ($TAG)" \
             --notes "Built from termux-packages $TP_SHA with prefix /data/data/$APP_PACKAGE/files/usr. SHA-256 is in the .sha256 file; pin it in the app."
           echo "Release tag: $TAG" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish signed apt repository (branch apt-repo)
+        env:
+          GPG_PRIVATE: ${{ secrets.ZISHU_REPO_GPG_PRIVATE }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$GPG_PRIVATE" ]; then
+            echo "::warning::Secret ZISHU_REPO_GPG_PRIVATE not set - apt repository NOT published"; exit 0
+          fi
+          ARCH="${{ inputs.arch }}"
+          sudo apt-get install -y -qq apt-utils gnupg dpkg-dev xz-utils
+          export GNUPGHOME=$(mktemp -d); chmod 700 "$GNUPGHOME"
+          echo "$GPG_PRIVATE" | gpg --batch --import
+          KEYID=$(gpg --list-secret-keys --with-colons | awk -F: '/^fpr/{print $10; exit}')
+          PUBFPR=$(gpg --show-keys --with-colons repo-keys/zishu-repo.gpg | awk -F: '/^fpr/{print $10; exit}')
+          [ "$KEYID" = "$PUBFPR" ] || { echo "::error::Secret key ($KEYID) does not match repo-keys/zishu-repo.gpg ($PUBFPR)"; exit 1; }
+
+          REMOTE="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          rm -rf old pages; mkdir -p pages/apt/pool/main
+          if git ls-remote --exit-code --heads "$REMOTE" apt-repo >/dev/null 2>&1; then
+            git clone -q --depth 1 --branch apt-repo "$REMOTE" old
+            [ -d old/apt/pool/main ] && cp -r old/apt/pool/main/. pages/apt/pool/main/ || true
+          fi
+          for f in tp/output/*.deb; do cp "$f" "pages/apt/pool/main/$(basename "$f" | tr ':' '-')"; done
+
+          cd pages/apt
+          D="dists/stable/main/binary-$ARCH"; mkdir -p "$D"
+          dpkg-scanpackages --multiversion --arch "$ARCH" pool/main > "$D/Packages"
+          gzip -k -f "$D/Packages"; xz -k -f "$D/Packages"
+          grep -c '^Package:' "$D/Packages"
+          apt-ftparchive \
+            -o APT::FTPArchive::Release::Origin=Zishu \
+            -o APT::FTPArchive::Release::Label="Zishu Terminal" \
+            -o APT::FTPArchive::Release::Suite=stable \
+            -o APT::FTPArchive::Release::Codename=stable \
+            -o APT::FTPArchive::Release::Architectures="$ARCH" \
+            -o APT::FTPArchive::Release::Components=main \
+            release dists/stable > dists/stable/Release
+          gpg --batch --yes --local-user "$KEYID" --clearsign -o dists/stable/InRelease dists/stable/Release
+          gpg --batch --yes --local-user "$KEYID" -abs -o dists/stable/Release.gpg dists/stable/Release
+          cd ..
+          touch .nojekyll
+          git init -q -b apt-repo
+          git config user.name "github-actions"; git config user.email "github-actions@users.noreply.github.com"
+          git add -A && git commit -q -m "apt repository (run ${GITHUB_RUN_NUMBER})"
+          git push -q --force "$REMOTE" apt-repo
+          echo "### apt repository" >> "$GITHUB_STEP_SUMMARY"
+          echo "Published to branch \`apt-repo\`. URL: $REPO_URL (enable Settings -> Pages -> Branch apt-repo / root)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Pack all built .deb files (names contain ':' so they go in a tar)
         if: always()
