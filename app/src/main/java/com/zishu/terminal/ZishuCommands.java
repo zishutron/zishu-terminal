@@ -80,7 +80,7 @@ public class ZishuCommands {
         if (cmd.equals("zhelp"))        { help(parts); return true; }
         if (cmd.equals("zinfo"))        { info(); return true; }
         if (cmd.equals("zclear"))       { host.clearScreen(); return true; }
-        if (cmd.equals("zversion"))     { host.print("Zishu Terminal v5.6.5"); return true; }
+        if (cmd.equals("zversion"))     { host.print("Zishu Terminal v6.0.0"); return true; }
         if (cmd.equals("ztheme"))       { theme(parts); return true; }
         if (cmd.equals("zhistory"))     { host.showHistory(); return true; }
         if (cmd.equals("zsession"))     { sessionInfo(); return true; }
@@ -146,7 +146,7 @@ public class ZishuCommands {
 
     private void help(String[] parts) {
         if (parts.length >= 2) { host.showHelpTopic(parts[1]); return; }
-        host.print("Zishu Terminal v5.6.5 Commands");
+        host.print("Zishu Terminal v6.0.0 Commands");
         host.print("  zhelp [topic]   Show help");
         host.print("  zinfo           System information");
         host.print("  zclear          Clear terminal");
@@ -244,7 +244,7 @@ public class ZishuCommands {
     // ============================================================
 
     private void info() {
-        host.print("Zishu Terminal v5.6.5");
+        host.print("Zishu Terminal v6.0.0");
         host.print("Device: " + safe(Build.MANUFACTURER) + " " + safe(Build.MODEL));
         host.print("Android: " + safe(Build.VERSION.RELEASE) + " (SDK " + Build.VERSION.SDK_INT + ")");
         String abi = (Build.SUPPORTED_ABIS.length > 0) ? Build.SUPPORTED_ABIS[0] : "unknown";
