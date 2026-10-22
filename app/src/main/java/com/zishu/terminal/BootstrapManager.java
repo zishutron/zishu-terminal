@@ -111,6 +111,7 @@ public class BootstrapManager {
             if (!staging.mkdirs()) { log.line("Cannot create " + staging); return false; }
             extract(zip, staging, log);
             patchOldPrefix(staging, log);
+            configureMirror(staging, repo, log);
 
             // Swap in: keep the previous prefix (old zpkg data) as usr.pre-bootstrap.
             File usr = env.getPrefix();
@@ -131,6 +132,7 @@ public class BootstrapManager {
                 return false;
             }
             new File(usr, ".zishu_bootstrap_ok").createNewFile();
+            env.applyToShellProcess();   // now bash + LD_PRELOAD for new sessions
             log.line("Health check OK: " + out.split("\n")[0]);
             log.line("Bootstrap installed. Open a new session.");
             return true;
@@ -249,6 +251,31 @@ public class BootstrapManager {
             catch (ErrnoException ex) { throw new IOException("symlink " + lnk + ": " + ex.getMessage()); }
         }
         log.line("Extracted " + files + " files, " + links + " symlinks.");
+    }
+
+    // pkg (termux-tools) otherwise tests official Termux mirrors and rewrites sources.list to one of
+    // them. Lock it to the Zishu repository only (single mirror file selected via chosen_mirrors).
+    private void configureMirror(File root, String repo, Log log) throws Exception {
+        String[] pr = repo.split("/");
+        if (pr.length != 2) throw new IOException("bad repo in bootstrap.properties: " + repo);
+        String url = "https://" + pr[0].toLowerCase() + ".github.io/" + pr[1] + "/apt";
+        File mirrors = new File(root, "etc/termux/mirrors");
+        deleteRecursive(mirrors);
+        mirrors.mkdirs();
+        writeText(new File(mirrors, "zishu"),
+                "# Zishu Terminal apt repository\nWEIGHT=1\nMAIN=\"" + url + "\"\n");
+        File chosen = new File(root, "etc/termux/chosen_mirrors");
+        deleteRecursive(chosen);
+        Os.symlink("mirrors/zishu", chosen.getPath());
+        File apt = new File(root, "etc/apt");
+        apt.mkdirs();
+        writeText(new File(apt, "sources.list"), "deb " + url + " stable main\n");
+        log.line("apt repository: " + url);
+    }
+
+    private static void writeText(File f, String text) throws IOException {
+        OutputStream o = new FileOutputStream(f);
+        try { o.write(text.getBytes("UTF-8")); } finally { o.close(); }
     }
 
     // Some upstream scripts (pkg, login, termux-reset, ...) keep the old com.termux path.
