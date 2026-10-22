@@ -15,7 +15,7 @@ import java.util.Locale;
  */
 public final class BannerRenderer {
 
-    public static final String VERSION = "v5.6.5";
+    public static final String VERSION = "v6.0.0";
 
     private BannerRenderer() {}
 
