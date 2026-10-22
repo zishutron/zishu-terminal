@@ -99,7 +99,13 @@ jobs:
 
       - name: Build builder image (prefix baked into the image)
         working-directory: tp
-        run: docker build -t zishu-package-builder -f scripts/Dockerfile scripts/
+        run: |
+          # Ubuntu mirrors are sometimes mid-sync (hash/size mismatch, apt exit 100). Retry a few times.
+          for i in 1 2 3 4 5; do
+            if docker build -t zishu-package-builder -f scripts/Dockerfile scripts/; then ok=1; break; fi
+            echo "docker build failed (attempt $i), retrying in 120s ..."; sleep 120
+          done
+          [ "${ok:-0}" = 1 ]
 
       - name: Build packages from source
         working-directory: tp
