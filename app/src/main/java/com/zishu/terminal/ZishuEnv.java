@@ -22,8 +22,10 @@ public final class ZishuEnv {
         this.ctx = c.getApplicationContext();
         // Use /data/data/<pkg>/files (the prefix the packages were built for) instead of
         // /data/user/0/... so string comparisons in upstream scripts match.
+        File real = this.ctx.getFilesDir();   // also creates the dir on first launch
         File canon = new File("/data/data/" + this.ctx.getPackageName() + "/files");
-        this.filesDir = canon.isDirectory() ? canon : this.ctx.getFilesDir();
+        if (!canon.isDirectory() && real != null) real.mkdirs();
+        this.filesDir = canon.isDirectory() ? canon : real;
     }
 
     public File getFilesRoot() { return filesDir; }
