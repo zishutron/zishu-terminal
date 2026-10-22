@@ -20,7 +20,10 @@ public final class ZishuEnv {
 
     public ZishuEnv(Context c) {
         this.ctx = c.getApplicationContext();
-        this.filesDir = this.ctx.getFilesDir();
+        // Use /data/data/<pkg>/files (the prefix the packages were built for) instead of
+        // /data/user/0/... so string comparisons in upstream scripts match.
+        File canon = new File("/data/data/" + this.ctx.getPackageName() + "/files");
+        this.filesDir = canon.isDirectory() ? canon : this.ctx.getFilesDir();
     }
 
     public File getFilesRoot() { return filesDir; }
