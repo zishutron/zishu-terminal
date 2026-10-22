@@ -21,6 +21,14 @@ on:
         description: "Extra packages to BUILD and BUNDLE (space separated; use libllvm for clang). Each is built separately; failures are skipped and listed in the summary"
         default: "python python-pip git wget openssh"
         type: string
+      repo_only_packages:
+        description: "Packages to BUILD and publish in the apt repo only (not bundled). Examples: 'nodejs-lts' | 'make cmake binutils ndk-sysroot' | 'libllvm' (clang). Use one group per run"
+        default: ""
+        type: string
+      build_core:
+        description: "Rebuild + release the bootstrap zip. Turn OFF for runs that only add packages to the apt repo"
+        default: true
+        type: boolean
       termux_ref:
         description: "termux-packages git ref (branch/tag/commit)"
         default: master
@@ -105,12 +113,18 @@ jobs:
           # Core must succeed.
           bp() { ./scripts/run-docker.sh ./build-package.sh -q -a "$ARCH" -o "$OUT" "$@" 2>&1 | tee -a "$GITHUB_WORKSPACE/build.log"; }
           (while sleep 300; do df -h / | tail -1 | sed 's/^/[disk] /'; done) &
-          bp $BOOT_PKGS
+          if [ "${{ inputs.build_core }}" = "true" ]; then bp $BOOT_PKGS; fi
           # Extras are built one by one so one failure does not lose everything.
           OK_EXTRA=""; FAIL_EXTRA=""
-          for p in ${{ inputs.extra_packages }}; do
+          for p in $( [ "${{ inputs.build_core }}" = "true" ] && echo "${{ inputs.extra_packages }}" ); do
             if bp "$p"; then OK_EXTRA="$OK_EXTRA $p"; else FAIL_EXTRA="$FAIL_EXTRA $p"; fi
           done
+          # Repo-only packages: built and published to the apt repo, never bundled.
+          OK_REPO=""; FAIL_REPO=""
+          for p in ${{ inputs.repo_only_packages }}; do
+            if bp "$p"; then OK_REPO="$OK_REPO $p"; else FAIL_REPO="$FAIL_REPO $p"; fi
+          done
+          { echo "### Repo-only packages"; echo "Built: ${OK_REPO:-none}"; echo "Failed: ${FAIL_REPO:-none}"; } >> "$GITHUB_STEP_SUMMARY"
           echo "OK_EXTRA=$OK_EXTRA" >> "$GITHUB_ENV"
           echo "FAIL_EXTRA=$FAIL_EXTRA" >> "$GITHUB_ENV"
           { echo "### Extra packages"; echo "Bundled: ${OK_EXTRA:-none}"; echo "Failed (not bundled): ${FAIL_EXTRA:-none}"; } >> "$GITHUB_STEP_SUMMARY"
@@ -144,6 +158,7 @@ jobs:
           grep -c '^Package:' repo/dists/stable/main/binary-${{ inputs.arch }}/Packages
 
       - name: Assemble bootstrap zip
+        if: inputs.build_core
         working-directory: tp
         run: |
           ADD=""
@@ -153,6 +168,7 @@ jobs:
           ls -la *.zip
 
       - name: Inspect prefix references (informational)
+        if: inputs.build_core
         working-directory: tp
         run: |
           mkdir chk && cd chk && unzip -q ../bootstrap-${{ inputs.arch }}.zip
@@ -174,6 +190,7 @@ jobs:
           grep -rIq "/data/data/$APP_PACKAGE/files/usr" etc bin || { echo "::error::new prefix not found anywhere"; exit 1; }
 
       - name: Checksum
+        if: inputs.build_core
         working-directory: tp
         run: |
           mkdir -p ../dist
@@ -189,14 +206,14 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && inputs.build_core
         with:
           name: bootstrap-${{ inputs.arch }}
           path: dist/*
           if-no-files-found: error
 
       - name: Publish release
-        if: inputs.publish
+        if: inputs.publish && inputs.build_core
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
