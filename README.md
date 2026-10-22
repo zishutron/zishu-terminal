@@ -92,6 +92,10 @@ docs/                      BOOTSTRAP.md, RELEASE_NOTES.md
 - Apps run with targetSdk 28, which is what allows executing binaries from app storage on Android 10+. This means the app is not suited for Google Play distribution.
 - Python bytecode precompile during install prints harmless linker warnings.
 
+## Credits and legal
+
+Zishu Terminal's app code, UI and commands are original work (see `LICENSE`). The Linux userspace packages are built from the [termux-packages](https://github.com/termux/termux-packages) build scripts by this project's own workflow. Zishu Terminal is **not affiliated with or endorsed by Termux**. Every package keeps its own open-source license: see [`NOTICE.md`](NOTICE.md), [`THIRD_PARTY_LICENSES.md`](THIRD_PARTY_LICENSES.md) and [`PRIVACY.md`](PRIVACY.md). Source for GPL/LGPL packages is available as described in `NOTICE.md`.
+
 ## Security
 
 - Bootstrap download is checked against a pinned SHA-256.
