@@ -767,7 +767,7 @@ public class MainActivity extends Activity {
 
         try {
             String cwd = getCurrentCwd();
-            if (CurlBridge.tryHandle(MainActivity.this, line, cwd, new CurlBridge.Output() {
+            if (!env.isBootstrapInstalled() && CurlBridge.tryHandle(MainActivity.this, line, cwd, new CurlBridge.Output() {
                 @Override public void line(String txt) { appendLineAsync(txt); }
             })) return true;
         } catch (Throwable t) { appendLineAsync("curl: internal error: " + t.getMessage()); return true; }
