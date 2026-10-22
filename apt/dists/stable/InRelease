@@ -1,0 +1,46 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Architectures: aarch64
+Codename: stable
+Components: main
+Date: Thu, 22 Oct 2026 18:39:35 +0000
+Label: Zishu Terminal
+Origin: Zishu
+Suite: stable
+MD5Sum:
+ 6c1c8f1246bbd2e378d6bfb527bc7d0c              145 Release
+ 580f9a8917cf0d0ca78eee75abb8e894           134635 main/binary-aarch64/Packages
+ 7811ad2297975a43be4c22a4daead705            44635 main/binary-aarch64/Packages.gz
+ 69f14969ea754507cd58e2f97f3fa63b            37896 main/binary-aarch64/Packages.xz
+SHA1:
+ 2e368b08c81070c87bf4a6cd9c391d69fdef4c4f              145 Release
+ 85de48ed5086faa63d1ab3a38e77307103df243f           134635 main/binary-aarch64/Packages
+ 0cc6a644f0de1e0b27d61fcffa0b7a56c0636943            44635 main/binary-aarch64/Packages.gz
+ ce8845bb57e1f83f6bb4c01cdc6b14486f782409            37896 main/binary-aarch64/Packages.xz
+SHA256:
+ 70223abd9cd962fe2398d71211bdbc87a7ca96e8b303acd855ad31e801df63ca              145 Release
+ 68d38249b278213279e6bd1fa831386cef5a3051c06167b1f495b5c0127ca934           134635 main/binary-aarch64/Packages
+ 7aca8819c2ea35d1142c6539a5bb8f3fda9bfdf3bf10e80ea65829ad0648694d            44635 main/binary-aarch64/Packages.gz
+ d447170536b11d4d2d6356b7b243d21b81a7ae6ce47558f99521592595c25165            37896 main/binary-aarch64/Packages.xz
+SHA512:
+ d5a7e806a0c843dcf1eb9c19fb49be409e7bbc4183f1ee427f86a71202c67cf8495cb6029d7850485ac69f100a59a81b2700a3f1b2e884ee012f6d9d328beac7              145 Release
+ 0e2edaf69f4e21bd99f574c9929db42725908629135daa40eaf0fd9c2ed6d13251b6ba58922e0e0789214a2d41847755182525d93f7486a25ff4302b8f823794           134635 main/binary-aarch64/Packages
+ 98c37475bbc21fff32650377938d8629b9e683d0105eaa9114ff365cb23a1da77883eecfd3fd2dd4b26ff1aba14778b59825ffc4d73c80d5e97a152497a688ec            44635 main/binary-aarch64/Packages.gz
+ 1dd73cd72c82278ff8383469dfcc5b20c4e95637d24f58939a71e6be75595892e5e48d8d489fd54c1b79c1f8f61bea0fa1c4a7b1e5bd5b5cbcbe8fb6bb9f4a89            37896 main/binary-aarch64/Packages.xz
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEdGPfuaEM6b98yRbAdqe0QFeBFtYFAmraWGcACgkQdqe0QFeB
+Ftbp5Q/9GJV9WmdEtPhgCDzjmfSlsC7GEtI1odolJPlLgeuh3uUKnlZ8BQJYYUcD
+NqKiLD9NtpjkDZtfz18AGrU8FtAAiXQCjVRikUA2TusPe22uoZ7e6Bx79NnE+fc9
+uXeFI9CxhCPjvFwSakOm9bArnmbq0YYNaSePatNTOFbP/TC/goCjCeIXBIqOLyqI
+/IgmeBKsRxdaQXswjsbYivnMxQC8mHLINZtky0Pz0Y1WVZ7sFrXl1lRY9EtoRJ5J
+WSfun4FM2oCIZf/kaqwcNbLerynsNMBhF7Rv4jRrMRLOth9u5UKs6Z3ub4Uu7w1x
+EnzyHUA3OBFdN+76QtTEVuSL9/XBSosxnZxbpLXOrredkOaD73eQnONSjcS33MaG
++j2bYu0GIbfARJwrYX6QO6Bx74a5eZIp692mB5006caqKAb1l6VUcQ3w3RjyljJS
+nl88Kx6NaRBzfZecWkKKN/LjOoJRMTMbs/cdBUcmPGtlicw7T4y8+pGra73vvfJa
+9QHi84U0+uxX/KVdPb8kUFih0/uSKgNVcPRG0vVmVtMko6BhHgZ+EUhprF7HQs+x
+WhViT0zu/UyYLtQLv5FvGdro8opnbTn8YtWRgiOtwysdvSzT0vCXi/fqStXjIH0u
+l/Y5eENN79e+RanFbF+sXmAjODmEopadSK/0fWDsdMXGFjkiIf0=
+=2WHo
+-----END PGP SIGNATURE-----
