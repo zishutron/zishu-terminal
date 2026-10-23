@@ -64,9 +64,12 @@ public class SystemInfoActivity extends Activity {
             }
         } catch (Throwable ignored) {}
 
-        sb.append("\n─── Current limitations ───\n");
-        sb.append("Developer toolchains are not bundled.\n");
-        sb.append("Remote package fetching is not enabled.\n");
+        sb.append("\n─── Userspace ───\n");
+        if (new ZishuEnv(this).isBootstrapInstalled()) {
+            sb.append("Installed. Real packages: pkg install <name>\n");
+        } else {
+            sb.append("Not installed. Run zbootstrap install.\n");
+        }
 
         tv.setText(sb.toString());
     }
