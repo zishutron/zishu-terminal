@@ -64,7 +64,7 @@ public class ZpkgManager {
         log("");
         log("─── Current limitations ───");
         log("zpkg v6.0.0 manages local .zpkg packages only.");
-        log("Remote package downloads are not enabled in this build.");
+        log("zpkg handles local .zpkg packages only. For real packages use: pkg install <name>");
         log("Local .zpkg packages are fully supported.");
         log("Remote repositories are planned for a future release.");
     }
@@ -303,14 +303,13 @@ public class ZpkgManager {
             log("");
             log("No repositories configured.");
             log("");
-            log("Remote package downloading is not enabled in this build.");
+            log("zpkg does not download packages. Use: pkg install <name>");
             log("Local package database refreshed.");
             return;
         }
         log("Configured repositories: " + repos);
         log("");
-        log("Remote fetching is not enabled in this build.");
-        log("This is planned for a future release.");
+        log("zpkg does not download packages. Use: pkg install <name>");
         log("Local package database refreshed.");
     }
 
@@ -378,7 +377,7 @@ public class ZpkgManager {
 
         log("");
         log("Note: zpkg v6.0.0 manages local packages only.");
-        log("Remote fetching is not enabled in this build.");
+        log("For real packages use: pkg install <name>");
         log("zpkg doctor complete.");
     }
 
