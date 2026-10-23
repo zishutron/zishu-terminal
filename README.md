@@ -101,3 +101,9 @@ Zishu Terminal's app code, UI and commands are original work (see `LICENSE`). Th
 - Bootstrap download is checked against a pinned SHA-256.
 - apt only trusts the project's own signing key.
 - No fake functionality: commands either run real binaries or say they are unavailable.
+
+  ## Download 
+
+To use the latest version of Zishu Terminal, download it from the release on GitHub. 
+[Download Link](https://github.com/zishutron/zishu-terminal/releases/download/v6.0.0/zishu.terminal_v6.0.0.apk)
+
