@@ -34,7 +34,8 @@ public class ToolsActivity extends Activity {
             sb.append('\n');
         }
         sb.append("\nInstalled tools use the real executable.\n");
-        sb.append("Missing tools can be added through zpkg.");
+        if (env.isBootstrapInstalled()) sb.append("Add missing tools with: pkg install <name>");
+        else sb.append("Run zbootstrap install first, then add tools with: pkg install <name>");
         tv.setText(sb.toString());
     }
 }
