@@ -279,6 +279,8 @@ public class MainActivity extends Activity {
         inputCommand.postDelayed(new Runnable() {
             @Override public void run() { focusInputAndShowKeyboard(); }
         }, 300);
+
+        offerBootstrapIfNeeded();
     }
 
     // ================================================================
@@ -885,6 +887,82 @@ public class MainActivity extends Activity {
                         }
                     }
                 }).show();
+    }
+
+    // ================================================================
+    // First-run: offer to download the Linux userspace (bootstrap)
+    // ================================================================
+
+    private static boolean bootstrapPromptShown = false;
+    private static boolean bootstrapInstalling = false;
+
+    private void offerBootstrapIfNeeded() {
+        if (env.isBootstrapInstalled() || bootstrapInstalling || bootstrapPromptShown) return;
+        String arch = BootstrapManager.detectArch();
+        if (arch == null || !arch.equals("aarch64")) {
+            appendLine("Note: the Linux userspace is not available for this device (" + String.valueOf(arch) + ") yet.");
+            return;
+        }
+        bootstrapPromptShown = true;
+        if (isFinishing()) return;
+        new AlertDialog.Builder(this)
+                .setTitle("Download required components")
+                .setMessage("Zishu Terminal needs to download its Linux environment "
+                        + "(bash, Python, Git, SSH, curl, package manager).\n\n"
+                        + "Download size: about 61 MB. Free storage needed: about 600 MB.\n"
+                        + "Wi-Fi is recommended.\n\n"
+                        + "Without it the terminal only has Android's basic shell.")
+                .setCancelable(false)
+                .setPositiveButton("Download now", new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface d, int w) { startBootstrapDownload(); }
+                })
+                .setNegativeButton("Later", new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface d, int w) {
+                        appendLine("Linux environment not installed. Run: zbootstrap install");
+                    }
+                })
+                .show();
+    }
+
+    private void startBootstrapDownload() {
+        if (bootstrapInstalling) return;
+        bootstrapInstalling = true;
+        appendLine("Downloading important resources (Linux environment) ...");
+        appendLine("Please keep the app open. This can take a few minutes.");
+        final BootstrapManager bm = new BootstrapManager(this);
+        new Thread(new Runnable() {
+            @Override public void run() {
+                boolean ok = false;
+                try {
+                    ok = bm.install(new BootstrapManager.Log() {
+                        @Override public void line(final String line) {
+                            mainHandler.post(new Runnable() {
+                                @Override public void run() { appendLine(line); }
+                            });
+                        }
+                    });
+                } catch (Throwable t) {
+                    final String msg = String.valueOf(t.getMessage());
+                    mainHandler.post(new Runnable() {
+                        @Override public void run() { appendLine("Install error: " + msg); }
+                    });
+                }
+                final boolean success = ok;
+                mainHandler.post(new Runnable() {
+                    @Override public void run() {
+                        bootstrapInstalling = false;
+                        if (success) {
+                            env.applyToShellProcess();
+                            restartActiveShell();
+                            appendLine("Ready. Real bash is now active. Try: python3 --version");
+                        } else {
+                            bootstrapPromptShown = false;
+                            appendLine("Download failed. Check your connection and run: zbootstrap install");
+                        }
+                    }
+                });
+            }
+        }).start();
     }
 
     private void restartActiveShell() {
