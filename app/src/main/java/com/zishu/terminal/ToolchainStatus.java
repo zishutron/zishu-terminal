@@ -36,6 +36,23 @@ public class ToolchainStatus {
         };
     }
 
+    /** Honest install hint for a missing tool. */
+    public static String hint(String name) {
+        String pkg;
+        if (name.equals("node")) pkg = "nodejs-lts";
+        else if (name.equals("npm")) pkg = "npm";
+        else if (name.equals("git")) pkg = "git";
+        else if (name.equals("ssh") || name.equals("scp")) pkg = "openssh";
+        else if (name.equals("python") || name.equals("python3")) pkg = "python";
+        else if (name.equals("pip")) pkg = "python-pip";
+        else if (name.equals("clang") || name.equals("gcc")) pkg = "clang";
+        else if (name.equals("make")) pkg = "make";
+        else if (name.equals("cmake")) pkg = "cmake";
+        else if (name.equals("java") || name.equals("javac")) return "not available yet (no Java package in the repo)";
+        else return "not installed";
+        return "not installed - run: pkg install " + pkg;
+    }
+
     private static Status check(ZishuEnv env, String name, String display) {
         Status s = new Status();
         s.tool = name;
@@ -43,7 +60,7 @@ public class ToolchainStatus {
         String path = ToolRegistry.findInPath(env, name);
         s.installed = (path != null);
         s.path = path;
-        s.note = s.installed ? "" : "requires package";
+        s.note = s.installed ? "" : hint(name);
         return s;
     }
 }
