@@ -46,11 +46,11 @@ The apt repo is published at `https://zishutron.github.io/zishu-terminal/apt` an
 |---|---|
 | bash, coreutils, apt, dpkg, nano, less, grep, sed, tar, ... | Included in bootstrap |
 | python, python-pip, git, wget, openssh | Included in bootstrap |
-| make | Available via `pkg install` |
-| Node.js / npm (`nodejs-lts`) | Being built |
-| C / C++ (clang, cmake, binutils) | Planned |
+| make, cmake, binutils | Available via `pkg install` |
+| Node.js 24 + npm (`pkg install nodejs-lts npm`) | Available |
+| C / C++ (`pkg install clang`: clang, lld, llvm) | Available |
 
-Notes: pip packages that need native compilation may fail until the C/C++ toolchain is available.
+Notes: with `clang`, `make` and `cmake` installed, C/C++ programs and many native pip/npm packages can be compiled on the device. GNU binutils tools are installed with a `g` prefix (`gar`, `gnm`, `ld.bfd`); `ar` and `ld` come from LLVM.
 
 ## Building
 
