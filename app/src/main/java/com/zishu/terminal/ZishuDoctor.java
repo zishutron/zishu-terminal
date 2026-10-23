@@ -40,15 +40,19 @@ public class ZishuDoctor {
         log("=====================");
         log("Diagnostics complete.");
         log("");
-        log("Note: native toolchains are not bundled yet.");
-        log("Developer toolchains (Python, Git, SSH, Node, C/C++)");
-        log("are not bundled. Remote package fetching is not enabled.");
+        if (new ZishuEnv(ctx).isBootstrapInstalled()) {
+            log("Userspace installed. Add missing tools with: pkg install <name>");
+        } else {
+            log("Userspace not installed. Run: zbootstrap install");
+            log("(gives bash, Python, Git, SSH, curl; more via pkg install)");
+        }
     }
 
     private void checkShell() {
-        File sh = new File("/system/bin/sh");
-        if (sh.exists()) log("[OK]   Shell: /system/bin/sh");
-        else log("[FAIL] Shell not found at /system/bin/sh");
+        ZishuEnv e = new ZishuEnv(ctx);
+        String path = e.shellPath();
+        if (new File(path).exists()) log("[OK]   Shell: " + path);
+        else log("[FAIL] Shell not found at " + path);
     }
 
     private void checkTerminalEngine() {
@@ -72,8 +76,10 @@ public class ZishuDoctor {
     private void checkPackageDb() {
         ZishuEnv env = new ZishuEnv(ctx);
         File db = env.getPkgDbFile();
-        if (db.exists()) log("[OK]   Package DB: " + db.getAbsolutePath());
-        else log("[WARN] Package DB not initialized yet");
+        if (new File(env.getPrefix(), "bin/pkg").exists()) log("[OK]   pkg (apt/dpkg) available");
+        else log("[INFO] pkg not installed (run zbootstrap install)");
+        if (db.exists()) log("[OK]   zpkg local DB: " + db.getAbsolutePath());
+        else log("[INFO] zpkg local DB not created (only used for local .zpkg packages)");
     }
 
     private void checkEditor() {
@@ -129,7 +135,7 @@ public class ZishuDoctor {
         ZishuEnv env = new ZishuEnv(ctx);
         String p = ToolRegistry.findInPath(env, name);
         if (p != null) log("  [OK]   " + name + "  " + p);
-        else log("  [MISS] " + name + "  (not installed)");
+        else log("  [MISS] " + name + "  (" + ToolchainStatus.hint(name) + ")");
     }
 
     private void log(String s) { if (logger != null) logger.line(s); }
