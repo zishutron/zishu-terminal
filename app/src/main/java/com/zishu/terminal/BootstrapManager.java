@@ -134,7 +134,7 @@ public class BootstrapManager {
             new File(usr, ".zishu_bootstrap_ok").createNewFile();
             env.applyToShellProcess();   // now bash + LD_PRELOAD for new sessions
             log.line("Health check OK: " + out.split("\n")[0]);
-            log.line("Bootstrap installed. Now fully close and reopen the app (or Menu -> Restart Shell) to get real bash.");
+            log.line("Bootstrap installed.");
             return true;
         } catch (Throwable t) {
             log.line("Bootstrap failed: " + t);
