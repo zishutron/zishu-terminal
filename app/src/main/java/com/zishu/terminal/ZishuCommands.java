@@ -131,7 +131,7 @@ public class ZishuCommands {
                             ui.post(new Runnable() { @Override public void run() { host.print(s); } });
                         }
                     });
-                    final String done = ok ? "zbootstrap: OK" : "zbootstrap: FAILED";
+                    final String done = ok ? "zbootstrap: OK - now use Menu -> Restart Shell (or reopen the app) to get real bash" : "zbootstrap: FAILED";
                     ui.post(new Runnable() { @Override public void run() { host.print(done); } });
                 }
             }).start();
