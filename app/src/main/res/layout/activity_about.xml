@@ -50,7 +50,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:lineSpacingExtra="4dp"
-            android:text="An advanced Android terminal and lightweight developer environment built by ZISHU TRON.\n\nNot a full Linux distribution. Not a Termux replacement. A focused mobile terminal that respects Android's security model."
+            android:text="An advanced Android terminal and developer environment built by ZISHU TRON.\n\nThe app, its interface and its commands are original work by ZISHU TRON."
             android:textColor="@color/term_dark_fg"
             android:textSize="13sp" />
 
@@ -60,7 +60,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:lineSpacingExtra="2dp"
-            android:text="Toolchains (Python, Git, SSH, Node, C/C++) are not bundled.\nRemote package downloads are planned for a future release."
+            android:text="Linux userspace and packages (bash, Python, Git, SSH, Node.js, C/C++) are built from the Termux project's termux-packages (termux.dev) and installed with zbootstrap and pkg. Each package keeps its own open-source license.\n\nZishu Terminal is not affiliated with or endorsed by Termux.\nSee NOTICE.md in the project repository for licenses and source code."
             android:textColor="#FF999999"
             android:textSize="12sp" />
     </LinearLayout>
